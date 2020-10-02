@@ -12,7 +12,7 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
-
+/.idea/
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
 /[Mm]emoryCaptures/
@@ -98,3 +98,7 @@ Assets/instance.id/AAIConfiguration.asset
 
 
 # End of https://www.toptal.com/developers/gitignore/api/unity
+
+Assembly-CSharp-Editor.csproj.DotSettings
+
+Assembly-CSharp.csproj.DotSettings
