@@ -1,0 +1,382 @@
+﻿/* --------------------------------------------------------
+  AAIDefaultEditorStyle.uss                 --
+  ----------------------------------------------------- */
+
+
+/* --------------------------------- */
+/* Container ----------------------- */
+/*<editor-fold desc="rootContainer">*/
+.rootContainer {
+    margin-left: -15px;
+    margin-right: 0px;
+
+    padding-top: 5px;
+    padding-right: 5px;
+}
+
+.beforeDefaultElements {
+    padding-left: 5px;
+}
+
+.mainBoxContainer {
+    padding-left: 20px;
+}
+
+.headerLabel {
+    align-self: flex-start;
+}
+
+.defaultText {
+    flex-grow: 1;
+}
+
+.descriptionTextField {
+    opacity: .90;
+    margin: 5px 0;
+}
+
+Toggle {
+    background-color: #404040;
+}
+
+Toggle:hover {
+    background-color: #292929;
+}
+
+Label {
+    opacity: 1;
+    align-self: center;
+    padding-top: 0;
+}
+
+TextField {
+    opacity: 1;
+}
+
+.toggleCheckmark {
+    align-self: center;
+}
+
+.toggleCheckmark:hover {
+    background-color: mediumslateblue;
+    -unity-background-image-tint-color: mediumslateblue;
+    border-width: 1px;
+    border-color: deepskyblue;
+}
+
+/* ---------------- categoryFoldout - */
+/* categoryFoldout ------------------ */
+/*<editor-fold desc="categoryFoldout">*/
+.categoryFoldout {
+    padding-top: 0;
+    padding-bottom: 1px;
+    padding-left: 0;
+    opacity: 1;
+}
+
+/* Category foldout main label */
+.categoryFoldout > .unity-toggle > .unity-toggle__input > .unity-label {
+    padding-left: 5px;
+    opacity: 1;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.categoryFoldout > .unity-toggle > .unity-toggle__input {
+    border-bottom-color: #222222;
+    border-bottom-width: 1px;
+}
+
+.categoryFoldout > .unity-toggle {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    margin-right: 0;
+}
+
+/* Keeps things from becoming dim */
+.categoryFoldout TextField {
+    opacity: 1;
+}
+
+/* Handled in code: AAIDefaultEditor.cs  */
+.categoryFoldout:hover {
+}
+
+.categoryFoldoutOpen:hover {
+}
+
+.categoryFoldoutClosed {
+}
+
+.categoryFoldout > .unity-foldout__content {
+    padding-top: 3px;
+    padding-left: 3px;
+    margin-left: -10px;
+    background-color: #383838;
+    border-left-color: #222222;
+    border-left-width: 1px;
+}
+
+
+/*</editor-fold> categoryFoldout*/
+
+/*-----------------------------------------------------*/
+/* ------------- propertyContainers - */
+/* propertyContainers --------------- */
+.propertyRow {
+    justify-content: flex-start;
+    flex-direction: row;
+    overflow: hidden;
+    padding-bottom: 3px;
+}
+
+.propertyColumn {
+    justify-content: flex-start;
+    flex-direction: column;
+    overflow: hidden;
+    padding-bottom: 3px;
+}
+
+.propertyColumn > .unity-property-field {
+    padding-top: 3px;
+}
+
+/*----------------------------- propertyObjectField ---*/
+/* -- propertyObjectField -----------------------------*/
+.propertyObjectLabel {
+    min-width: 110px;
+    max-width: 110px;
+    align-self: center;
+}
+
+.propertyObjectField {
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+/*------------------------------- propertyTextField ---*/
+/* -- propertyTextField -------------------------------*/
+.propertyTextLabel {
+    min-width: 110px;
+    max-width: 110px;
+    align-self: center;
+}
+
+.propertyTextField {
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+/*------------------------------- propertyInteger -----*/
+/* -- propertyInteger ---------------------------------*/
+.propertyIntegerLabel {
+    min-width: 110px;
+    max-width: 110px;
+    align-self: center;
+}
+
+.propertyIntegerField {
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+/*---------------------------------- propertyToggle ---*/
+/* -- propertyToggle ----------------------------------*/
+.propertyToggleRow {
+    margin-right: 2px;
+    border-width: 2px;
+    border-color: #292929;
+    background-color: #2E2E2E;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.propertyToggleLabel {
+    width: 55%;
+    max-width: 160px;
+    flex-grow: 1;
+    align-self: center;
+}
+
+.propertyToggleField {
+
+}
+
+.debugToggleRowToggle {
+    margin-left: 0;
+    -unity-background-image-tint-color: #BC387C;
+    opacity: 1;
+    background-color: #BC387C;
+    border-radius: 2px;
+    border-color: #BC387C;
+    align-self: flex-start;
+}
+
+.propertyToggleRowSpacer {
+    flex-grow: 4;
+    width: 50px;
+}
+
+.propertyToggleField > .unity-toggle__input {
+    -unity-background-image-tint-color: #BC387C;
+    opacity: 1;
+    background-color: #BC387C;
+    border-radius: 2px;
+    border-width: 1px;
+    border-color: #BC387C;
+}
+
+.propertyToggleField > .unity-toggle__input:hover {
+    -unity-background-image-tint-color: #BC387C;
+    opacity: .5;
+    background-color: #BC387C;
+    border-radius: 3px;
+    border-width: 1px;
+    border-color: #BC387C;
+}
+
+
+/*</editor-fold> rootContainer*/
+
+/*--------------------------- ArrayElementBuilder -----*/
+/* -- ArrayElementBuilder -----------------------------*/
+/*<editor-fold desc="ArrayElementBuilder">*/
+ArrayElementBuilder {
+    flex-grow: 1;
+    padding-bottom: 1px;
+}
+
+.interfaceButton {
+    margin-left: 0;
+    padding-left: 0;
+    margin-bottom: 8px;
+}
+
+.arrayFoldout {
+    padding-top: 0;
+    padding-bottom: 1px;
+    background-color: #373737;
+    /*border-left-width: 1px;*/
+    /*border-left-color: #252525;*/
+}
+
+.arrayFoldout > .unity-toggle > .unity-toggle__input > .unity-label {
+    padding-left: 5px;
+    opacity: 1;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.arrayBaseContainer {
+    margin-top: 2px;
+    margin-right: 3px;
+}
+
+.arrayRemoveButton {
+    color: whitesmoke;
+    background-color: #555555;
+    margin: 0;
+    border-radius: 0;
+    width: 14px;
+    height: 14px;
+    align-self: center;
+}
+
+.arrayAddButton {
+    color: whitesmoke;
+    background-color: #555555;
+    margin: 0;
+    border-radius: 0;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+    margin-bottom: 1px;
+}
+
+.arrayAddItemObjectField {
+
+}
+
+.makeStringItemContainer {
+    flex-direction: row;
+    flex-grow: 1;
+}
+
+.makeStringItem {
+
+}
+
+.makeObjectItemContainer {
+    flex-direction: row;
+    flex-grow: 1;
+    align-items: stretch;
+}
+
+.makeObjectItem {
+
+}
+
+.makePropertyItemContainer {
+    flex-direction: row;
+    flex-grow: 1;
+}
+
+.makePropertyItem {
+
+}
+
+.makeToggleItemContainer {
+    flex-direction: row;
+    flex-grow: 1;
+}
+
+.makeToggleItem {
+
+}
+
+.arrayFooter {
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-right: 3px;
+    align-items: center;
+    background-color: #414141;
+    border-width: 1px 0 1px 1px;
+    border-color: #292929;
+}
+
+.arrayFooterLabel {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+
+/*</editor-fold> ArrayInspectorElement*/
+
+
+/* -------------------------------- */
+/* Unity default Overrides -------- */
+/*<editor-fold desc="UnityDefaults">*/
+
+.unity-scroll-view {
+    flex: 1 0 0;
+}
+
+.unity-box {
+    flex: 1 0 0;
+    margin: 0;
+}
+
+.unity-popup-window {
+    padding: 5px 10px 12px;
+}
+
+/*</editor-fold>*/

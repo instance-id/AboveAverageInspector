@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b625532a19114bbb82ce67f76315330f, type: 3}
+  m_Name: AAIConfiguration
+  m_EditorClassIdentifier: 
+  description: Do not delete or move! This file is used by AAI.
+  expandCategoriesByDefault: 0
+  location: Assets/instance.id/
+  pathString: E:/_unity/_projects/AboveAverageInspector/
+  objectPath: Assets/instance.id//Objects/
+  stylePath: Assets/instance.id//Scripts/Layout/Style/
+  aaiStyleSheets:
+  - {fileID: 7433441132597879392, guid: eeb8dce49ff1f274b97ea7ebda48c608, type: 3}
+  - {fileID: 7433441132597879392, guid: 849a93fcda30d1d47b549b96997c67b4, type: 3}
+  - {fileID: 7433441132597879392, guid: 1e662a7b5f8a46943be1912643b9c732, type: 3}
+  aaiStyleSheetsDictionary:
+    _keys:
+    - AAICustomProperties
+    - AAIDefaultEditorBase
+    - AAIDefaultEditorStyle
+    _values:
+    - {fileID: 7433441132597879392, guid: eeb8dce49ff1f274b97ea7ebda48c608, type: 3}
+    - {fileID: 7433441132597879392, guid: 849a93fcda30d1d47b549b96997c67b4, type: 3}
+    - {fileID: 7433441132597879392, guid: 1e662a7b5f8a46943be1912643b9c732, type: 3}
+  aaiLayouts: []
+  aaiTypeStringList:
+  - AAIConfiguration
+  - AAIConfigurationEditor
+  - AAIDefaultEditor
+  drawerTypesList: []
+  classDataDictionary:
+    _keys: []
+    _values: []
+  refreshClassData: 0
+  enableCustomEditors: 1
+  configurationDebug: 0
+  defaultEditorDebug: 0
+  idConfigDebug: 0
