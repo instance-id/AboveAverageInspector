@@ -36,7 +36,9 @@ MonoBehaviour:
   - AAIConfiguration
   - AAIConfigurationEditor
   - AAIDefaultEditor
-  drawerTypesList: []
+  drawerTypesList:
+  - SerializedDictEditor
+  - AAIConfigurationEditor
   classDataDictionary:
     _keys: []
     _values: []

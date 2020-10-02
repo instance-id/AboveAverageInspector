@@ -11,7 +11,6 @@ using Debug = UnityEngine.Debug;
 namespace instance.id.AAI
 {
     // -- AAIConfigurationEditor.cs -------------------------------
-    [CreateAssetMenu(fileName = "AAIConfiguration.asset", menuName = "instance.id/System/Create Configuration Object", order = 0)]
     [Serializable]
     public class AAIConfiguration : ScriptableObject
     {
