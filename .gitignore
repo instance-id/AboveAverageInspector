@@ -102,3 +102,7 @@ Assets/instance.id/AAIConfiguration.asset
 Assembly-CSharp-Editor.csproj.DotSettings
 
 Assembly-CSharp.csproj.DotSettings
+
+.history/
+
+.vscode/
