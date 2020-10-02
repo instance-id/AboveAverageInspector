@@ -91,7 +91,7 @@ namespace instance.id.AAI.Editors
             if (idConfig.AAIConfiguration().classDataDictionary.TryGetValue(targetName, out var tmpClassData) && !needsRefresh)
             {
                 classDict.TryAddValue(targetName, tmpClassData);
-                if (defaultEditorDebug) Debug.Log($"Target: {classDict[targetName].typeName} Retrieved from Locator");
+                if (defaultEditorDebug) Debug.Log($"Target: {classDict[targetName].typeName} Retrieved from Config");
             }
             // ----------------------------------------- Current Default
             // -- If it does not exist, create it ----------------------
@@ -108,7 +108,7 @@ namespace instance.id.AAI.Editors
             if (idConfig.AAIConfiguration().classDataDictionary.TryGetValue(thisName, out var tmpEditorClassData) && !needsRefresh)
             {
                 classDict.TryAddValue(thisName, tmpEditorClassData);
-                if (defaultEditorDebug) Debug.Log($"Editor: {classDict[thisName].typeName} Retrieved from Locator");
+                if (defaultEditorDebug) Debug.Log($"Editor: {classDict[thisName].typeName} Retrieved from Config");
             }
             // ----------------------------------------- Current Default
             // -- If it does not exist, create it ----------------------

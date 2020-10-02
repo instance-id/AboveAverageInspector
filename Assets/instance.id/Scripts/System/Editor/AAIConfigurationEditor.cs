@@ -10,8 +10,8 @@ namespace instance.id.AAI.Editors
         private AAIConfiguration configuration;
         private VisualElement rootContainer;
 
-        [UICategory("Locator Paths")] private Button refreshPaths;
-        [UICategory("Styles")] private Button getStyleSheets;
+        [UICategory("Config Paths", 0)] private Button refreshPaths;
+        [UICategory("Styles", 1)] private Button getStyleSheets;
 
         // ---------------------------------------------------------- Initialization
         // -- BaseAwake ------------------------------------------------------------

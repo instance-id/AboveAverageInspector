@@ -23,10 +23,10 @@ namespace instance.id.AAI
 
         // @formatter:off ----------------- Location Data Fields
         // -- Location Data Fields -----------------------------
-        [UICategory("Locator Paths", 0)] public string location;
-        [UICategory("Locator Paths", 0)] public string pathString;
-        [UICategory("Locator Paths", 0)] public string objectPath;
-        [UICategory("Locator Paths", 0)] public string stylePath;
+        [UICategory("Config Paths", 0)] public string location;
+        [UICategory("Config Paths", 0)] public string pathString;
+        [UICategory("Config Paths", 0)] public string objectPath;
+        [UICategory("Config Paths", 0)] public string stylePath;
 
         // ---------------------------------------------- Styles
         // -- Styles -------------------------------------------

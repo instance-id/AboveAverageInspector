@@ -72,10 +72,10 @@ namespace instance.id.AAI
         }
 
 
-        // ----------------------------------------------------------------------------- GetLocator
-        // -- The AAIConfiguration keeps track of the current path of the AAI Asset as     --
-        // -- well as stores various other debug and configuration data needed by AAI      --
-        // -- GetLocator --------------------------------------------------------------------------
+        // ----------------------------------------------------------------------- GetConfiguration
+        // -- The AAIConfiguration keeps track of the current path of the AAI Asset as           --
+        // -- well as stores various other debug and configuration data needed by AAI            --
+        // -- GetConfiguration --------------------------------------------------------------------
         private static void GetConfiguration()
         {
             if (!(aaiConfiguration is null)) return;
@@ -86,9 +86,9 @@ namespace instance.id.AAI
             if (!(aaiConfiguration is null)) Assignments();
             else
             {
-                var locator = ScriptableObject.CreateInstance<AAIConfiguration>();
-                idPath = locator.GetLocation();
-                Object.DestroyImmediate(locator);
+                var aaiConfig = ScriptableObject.CreateInstance<AAIConfiguration>();
+                idPath = aaiConfig.GetLocation();
+                Object.DestroyImmediate(aaiConfig);
                 var assetName = $"{aaiConfigurationType}.asset";
                 var path = $"{idPath}/{assetName}";
                 if (debug) Debug.Log($"Path: {path}");
