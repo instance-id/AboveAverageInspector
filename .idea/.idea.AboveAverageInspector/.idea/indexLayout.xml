@@ -16,7 +16,9 @@
     </explicitIncludes>
     <explicitExcludes>
       <Path>.git</Path>
+      <Path>.history</Path>
       <Path>.idea</Path>
+      <Path>.vscode</Path>
       <Path>Library</Path>
       <Path>Logs</Path>
       <Path>Temp</Path>
