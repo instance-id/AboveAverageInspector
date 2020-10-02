@@ -1,5 +1,5 @@
 # AboveAverageInspector
-A custom inspector drawer, because I wanted something I could organize into groups
+A custom inspector drawer written using UIElements / UI Toolkit, because I wanted something I could organize into groups
 
 ### NOTE : Above-Average Inspector is a work in progress! 
 
