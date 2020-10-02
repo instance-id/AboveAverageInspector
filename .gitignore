@@ -75,7 +75,6 @@ Assembly-CSharp-Editor-firstpass.csproj
 Assembly-CSharp-Editor.csproj
 Assembly-CSharp-firstpass.csproj
 Assembly-CSharp.csproj
-OdinSerializer.csproj
 ProjectSettings/AudioManager.asset
 ProjectSettings/ClusterInputManager.asset
 ProjectSettings/DynamicsManager.asset
