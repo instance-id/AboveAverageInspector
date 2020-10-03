@@ -145,12 +145,23 @@ namespace instance.id.AAI.Editors
                 return null;
             }
 
+            var isAnimated = idConfig.AAIConfiguration().enableAnimation;
             if (classData.categoryList.Count < 1) return classDict;
             {
                 classData.categoryList.RemoveAll(x => Equals(x, defaultCategory));
                 classData.categoryList = classData.categoryList.OrderBy(x => x.order).ToList();
                 classData.categoryList.Add(defaultCategory);
-                classData.categoryList.ForEach(x => { categoryList.Add(new Foldout {name = x.category, text = x.category}); });
+
+                classData.categoryList.ForEach(x =>
+                {
+                    bool expand;
+                    expand = idConfig.AAIConfiguration().expandCategoriesByDefault || x.expand;
+
+                    VisualElement element = isAnimated
+                        ? new Foldout {name = x.category, text = x.category, value = false}
+                        : new Foldout {name = x.category, text = x.category, value = expand};
+                    categoryList.Add(element);
+                });
             }
             return classDict;
         }
@@ -549,7 +560,11 @@ namespace instance.id.AAI.Editors
         // -- ExecuteLocalDeferredTask -----------------------------------
         private void ExecuteLocalDeferredTask()
         {
-            var index = 1;
+            // -- Calls tasks to be ran from child classes ---------------
+            ExecuteDeferredTask();
+
+            if (!idConfig.AAIConfiguration().enableAnimation) return;
+            var index = 0;
             categoryList.ForEach(x =>
             {
                 if (x is null) return;
@@ -565,19 +580,16 @@ namespace instance.id.AAI.Editors
                 }
 
                 var isExpanded = category != null && category.expand;
-                categoryFoldout.value = idConfig.AAIConfiguration().expandCategoriesByDefault || isExpanded;
+                categoryFoldout.SetValueWithoutNotify(idConfig.AAIConfiguration().expandCategoriesByDefault || isExpanded);
 
                 var delayedTime = (long) (index * 0.13 * 1000); // @formatter:off
                 defaultRoot.schedule.Execute(e =>
                 {
                     categoryFoldout.Q<UIElementExpander>().Activate(categoryFoldout.value);
                 }).StartingIn(delayedTime);
-
-                index++; // @formatter:on
+                index++;
+                // @formatter:on
             });
-
-            // -- Calls tasks to be ran from child classes ---------------
-            ExecuteDeferredTask();
         }
 
         // @formatter:off ------------------------------- categoryToggleCB
