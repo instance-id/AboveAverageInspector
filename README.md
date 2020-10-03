@@ -20,6 +20,6 @@ Uncategorized fields are automatically placed in a "Default" category.
 
 
 ## Animated Foldouts
-![https://i.imgur.com/QjOsPsQ.gif](https://i.imgur.com/QjOsPsQ.gif)
+![media/animateddemo.gif](media/animateddemo.gif)
 ---
 ![alt text](https://i.imgur.com/cg5ow2M.png "instance.id")
