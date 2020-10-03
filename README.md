@@ -6,9 +6,9 @@ A custom inspector drawer written using UIElements / UI Toolkit, because I wante
 While the majority of the functionality is present, there more assuredly are still bugs.  
 (Known-Issue: Currently, the List items [ + ] Add and [ - ] Remove buttons are not working properly)
 
-| With Above-Average Inspector | Original Inspector |
-| ------------------------------------ | ------------------------------------ |
-| ![](https://i.imgur.com/8U6SGr9.png?1)  | ![](https://i.imgur.com/aQz7LIb.png?1) |
+| With Above-Average Inspector           | Original Inspector                     |
+| -------------------------------------- | -------------------------------------- |
+| ![](https://i.imgur.com/8U6SGr9.png?1) | ![](https://i.imgur.com/aQz7LIb.png?1) |
 
 ### Categorize your fields
 Use the ```[UICategory(name:"", order:0, expand:true)]``` attribute to draw your field in a category, order the categories, and decide if you want the category expanded by default. 
@@ -18,5 +18,8 @@ Uncategorized fields are automatically placed in a "Default" category.
 
 ![](https://i.imgur.com/E0amcGN.png)
 
+
+## Animated Foldouts
+![https://i.imgur.com/QjOsPsQ.gif](https://i.imgur.com/QjOsPsQ.gif)
 ---
 ![alt text](https://i.imgur.com/cg5ow2M.png "instance.id")

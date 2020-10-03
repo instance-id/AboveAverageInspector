@@ -43,6 +43,7 @@ namespace instance.id.AAI
         [HideInInspector] public SerializedDictionary<string, ClassData> classDataDictionary = new SerializedDictionary<string, ClassData>();
         public bool refreshClassData;
         public bool enableCustomEditors;
+        public bool enableAnimation;
         private int foundTypes;
 
         // @formatter:off -------------------------- Debug flags

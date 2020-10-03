@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.Analytics;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 
@@ -36,6 +37,7 @@ namespace instance.id.AAI.Editors
         protected SerializedDictionary<string, ClassData> classDataDictionary = new SerializedDictionary<string, ClassData>();
         protected List<VisualElement> categoryList = new List<VisualElement>();
         protected List<VisualElement> editorElements = new List<VisualElement>();
+        private List<VisualElement> expanders = new List<VisualElement>();
         private List<string> keyData = new List<string>();
 
         private static readonly List<AAIDefaultEditor> s_ActiveInspectors;
@@ -53,7 +55,15 @@ namespace instance.id.AAI.Editors
             }
         }
 
-        protected void Awake() // @formatter:off
+
+        // @formatter:off -------------------------------------- Accessors
+        // -- Virtual methods to be called from child classes           --
+        // Accessors -----------------------------------------------------
+        protected virtual void ExecuteDeferredTask() {}
+        protected virtual void ExecutePostBuildTask() {}
+        protected virtual void BaseAwake() {}
+        protected virtual void BaseOnEnable(){}
+        private void Awake()
         {
             var config = idConfig.AAIConfiguration();
             try { defaultEditorDebug = config.defaultEditorDebug; }
@@ -61,12 +71,7 @@ namespace instance.id.AAI.Editors
             BaseAwake(); // @formatter:on
         }
 
-        // @formatter:off -------------------------------------- Accessors
-        // Accessors -----------------------------------------------------
-        protected virtual void ExecuteDeferredTask() {}
-        protected virtual void BaseAwake() {}  
-        protected virtual void BaseOnEnable(){}
-        protected void OnEnable() // @formatter:on
+        private void OnEnable() // @formatter:on
         {
             s_ActiveInspectors.Add(this);
             defaultStyleSheet ??= idConfig.GetStyleSheet("AAIDefaultEditorStyle");
@@ -145,14 +150,8 @@ namespace instance.id.AAI.Editors
                 classData.categoryList.RemoveAll(x => Equals(x, defaultCategory));
                 classData.categoryList = classData.categoryList.OrderBy(x => x.order).ToList();
                 classData.categoryList.Add(defaultCategory);
-                classData.categoryList.ForEach(x =>
-                {
-                    bool expand;
-                    expand = idConfig.AAIConfiguration().expandCategoriesByDefault || x.expand;
-                    categoryList.Add(new Foldout {name = x.category, text = x.category, value = expand});
-                });
+                classData.categoryList.ForEach(x => { categoryList.Add(new Foldout {name = x.category, text = x.category}); });
             }
-
             return classDict;
         }
 
@@ -164,6 +163,7 @@ namespace instance.id.AAI.Editors
 
         public override VisualElement CreateInspectorGUI()
         {
+            if (Selection.activeObject is null || Selection.objects.Length == 0) return base.CreateInspectorGUI();
             if (!GetType().IsSubclassOf(typeof(ScriptableObject)) || categoryList is null || categoryList.Count == 0) return base.CreateInspectorGUI();
 
             if (!idConfig.AAIConfiguration().enableCustomEditors)
@@ -422,33 +422,109 @@ namespace instance.id.AAI.Editors
             foldout = boxContainer.Query<Foldout>().ToList();
             foldout.ForEach(x =>
             {
-                x.RegisterValueChangedCallback(categoryToggleCB);
-                x.AddToClassList("categoryFoldoutClosed");
-                x.Q<Toggle>().AddToClassList("categoryFoldoutClosed");
+                x.Q<Toggle>().ToggleInClassList("categoryFoldoutClosed");
                 x.Q(null, "unity-toggle__checkmark").AddToClassList("toggleCheckmark");
+
+                if (idConfig.AAIConfiguration().enableAnimation)
+                {
+                    var categoryFoldout = x;
+                    var content = categoryFoldout.Children().ToList();
+                    if (content.Count == 0) return;
+
+                    var categoryExpander = new UIElementExpander();
+                    content.ForEach(c =>
+                    {
+                        c.RemoveFromHierarchy();
+                        categoryExpander.AddToGroup(c);
+                    });
+                    categoryExpander.name = $"{x.name}Expander";
+
+                    x.RegisterCallback((ChangeEvent<bool> evt) =>
+                    {
+                        if (evt.target == x)
+                        {
+                            categoryExpander.Activate(evt.newValue);
+                            evt.StopPropagation();
+                        }
+                        else categoryExpander.TriggerValueChange(true);
+                    });
+
+                    x.ToggleInClassList("categoryFoldoutClosed");
+                    x.Add(categoryExpander);
+                }
             });
 
+            // if (idConfig.AAIConfiguration().enableAnimation)
+            // {
+            //     categoryList.ForEach(x =>
+            //     {
+            //         if (x is null) return;
+            //         var categoryFoldout = (Foldout) x;
+            //
+            //         var content = categoryFoldout.Children().ToList();
+            //         if (content.Count == 0) return;
+            //
+            //         var categoryExpander = new UIElementExpander();
+            //         content.ForEach(c =>
+            //         {
+            //             c.RemoveFromHierarchy();
+            //             categoryExpander.AddToGroup(c);
+            //         });
+            //         categoryExpander.name = $"{x.name}Expander";
+            //
+            //         x.RegisterCallback((ChangeEvent<bool> evt) =>
+            //         {
+            //             if (evt.target == x)
+            //             {
+            //                 categoryExpander.Activate(evt.newValue);
+            //                 evt.StopPropagation();
+            //             }
+            //
+            //             else categoryExpander.TriggerValueChange(true);
+            //         });
+            //
+            //         x.ToggleInClassList("categoryFoldoutClosed");
+            //
+            //         // var testFoldout = new Foldout() {text = x.name};
+            //         // categoryExpander.shownItem = testFoldout;
+            //         x.Add(categoryExpander);
+            //         // categoryFoldout.Add(testFoldout);
+            //     });
+            // }
+
+            // var foldoutToggle = categoryFoldout.Q<Toggle>(className: Foldout.toggleUssClassName);
+            // var foldoutLabel = foldoutToggle.Q<Label>(className: Toggle.textUssClassName);
+            // x.RegisterCallback((GeometryChangedEvent evt) =>
+            // {
+            //     if (evt.currentTarget != x)
+            //     {
+            //         categoryExpander.TriggerGeometryChange(evt);
+            //         evt.StopPropagation();
+            //     }
+            // });
 
             serializedObject.ApplyModifiedProperties();
 
             afterDefaultElements ??= new VisualElement();
             afterDefaultElements.name = "afterDefaultElements";
             afterDefaultElements.AddToClassList("afterDefaultElements");
+
             boxContainer.Add(afterDefaultElements);
             defaultRoot.Add(boxContainer);
 
-            defaultRoot.RegisterCallback<GeometryChangedEvent>(ExecuteDeferredTask);
+            defaultRoot.RegisterCallback<GeometryChangedEvent>(ExecutePostBuildTask);
+            defaultRoot.schedule.Execute(ExecuteLocalDeferredTask).StartingIn(0);
 
             return defaultRoot;
         }
 
-        // ------------------------------------------- ExecuteDeferredTask
+        // ------------------------------------------ ExecutePostBuildTask
         // -- Allows for execution of tasks after properties have       --
         // -- been built, but before the layout is actually drawn       --
-        // -- ExecuteDeferredTask ----------------------------------------
-        private void ExecuteDeferredTask(GeometryChangedEvent evt)
+        // -- ExecutePostBuildTask ---------------------------------------
+        private void ExecutePostBuildTask(GeometryChangedEvent evt)
         {
-            defaultRoot.UnregisterCallback<GeometryChangedEvent>(ExecuteDeferredTask);
+            defaultRoot.UnregisterCallback<GeometryChangedEvent>(ExecutePostBuildTask);
 
             // -- Locates buttons added to CustomEditor which need categorization ----
             var buttons = defaultRoot.Query<Button>().ToList();
@@ -464,6 +540,44 @@ namespace instance.id.AAI.Editors
                         button.RemoveFromHierarchy();
                         category.Add(button);
                     });
+
+            ExecutePostBuildTask();
+        }
+
+        // -------------------------------------- ExecuteLocalDeferredTask
+        // -- Allows for execution of tasks after first frame has drawn --
+        // -- ExecuteLocalDeferredTask -----------------------------------
+        private void ExecuteLocalDeferredTask()
+        {
+            var index = 1;
+            categoryList.ForEach(x =>
+            {
+                if (x is null) return;
+                var categoryFoldout = (Foldout) x;
+                var catList = classDataDictionary[keyData[0]].categoryList;
+                UICategory category = null;
+                for (var index = 0; index < catList.Count; index++)
+                {
+                    var e = catList[index];
+                    if (e.category != categoryFoldout.name) continue;
+                    category = e;
+                    break;
+                }
+
+                var isExpanded = category != null && category.expand;
+                categoryFoldout.value = idConfig.AAIConfiguration().expandCategoriesByDefault || isExpanded;
+
+                var delayedTime = (long) (index * 0.13 * 1000); // @formatter:off
+                defaultRoot.schedule.Execute(e =>
+                {
+                    categoryFoldout.Q<UIElementExpander>().Activate(categoryFoldout.value);
+                }).StartingIn(delayedTime);
+
+                index++; // @formatter:on
+            });
+
+            // -- Calls tasks to be ran from child classes ---------------
+            ExecuteDeferredTask();
         }
 
         // @formatter:off ------------------------------- categoryToggleCB
