@@ -6,7 +6,6 @@ using UnityEngine.UIElements.Experimental;
 
 namespace instance.id.AAI.Extensions
 {
-    // Based on : https://gist.github.com/karljj1/5c7101b70e174d68b72271cc1a3ab5db
     public class UIElementExpander : VisualElement
     {
         ValueAnimation<StyleValues> m_FoldoutAnimation;
@@ -27,10 +26,6 @@ namespace instance.id.AAI.Extensions
             get => firstStart ? tmpAnimTime : m_AnimationTime;
             [UsedImplicitly] set => m_AnimationTime = value;
         }
-
-#pragma warning disable 414
-        private int defaultAnimationTime = 500;
-#pragma warning restore 414
 
         public UIElementExpander()
         {

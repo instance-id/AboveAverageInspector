@@ -390,3 +390,6 @@
    END OF TERMS AND CONDITIONS
 
 ```
+
+# Github Gists
+https://gist.github.com/karljj1/5c7101b70e174d68b72271cc1a3ab5db
