@@ -3,7 +3,7 @@ A custom inspector drawer written using UIElements / UI Toolkit, because I wante
 
 ### NOTE : Above-Average Inspector is a work in progress! 
 
-While the majority of the functionality is present, there more assuredly are still bugs.  
+While the majority of the functionality is present, there most assuredly are still bugs.  
 (Known-Issue: Currently, the List items [ + ] Add and [ - ] Remove buttons are not working properly)
 
 | With Above-Average Inspector           | Original Inspector                     |
