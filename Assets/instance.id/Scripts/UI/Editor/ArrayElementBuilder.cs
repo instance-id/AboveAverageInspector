@@ -62,12 +62,10 @@ namespace instance.id.AAI.Editors
             do
             {
                 if (SerializedProperty.EqualContents(property, endProperty)) break;
-                if (property.propertyType == SerializedPropertyType.ArraySize)
-                {
-                    arraySize = property.intValue;
-                    bindingPath = property.propertyPath;
-                    break;
-                }
+                if (property.propertyType != SerializedPropertyType.ArraySize) continue;
+                arraySize = property.intValue;
+                bindingPath = property.propertyPath;
+                break;
             } while (property.NextVisible(false));
 
             arrayProperty.serializedObject.SetIsDifferentCacheDirty();
@@ -122,7 +120,6 @@ namespace instance.id.AAI.Editors
                         break;
                 }
             }
-
             Add(child);
             return child;
         }
@@ -141,12 +138,8 @@ namespace instance.id.AAI.Editors
                 name = "valueTextField"
             }; // @formatter:off
 
-            try {  pf.SetValueWithoutNotify(property.GetArrayElementAtIndex(index).stringValue); }
-            catch (Exception e) // @formatter:on
-            {
-                Debug.Log($"Item: {propertyPath} : {e}");
-                throw;
-            }
+            try { pf.SetValueWithoutNotify(property.GetArrayElementAtIndex(index).stringValue); }
+            catch (Exception e) { Debug.Log($"Item: {propertyPath} : {e}"); throw; } // @formatter:on
 
             pf.AddToClassList("makeStringItem");
             pf.AddToClassList("unity-base-field--no-label");
@@ -174,11 +167,7 @@ namespace instance.id.AAI.Editors
             }; // @formatter:off
 
             try { pf.SetValueWithoutNotify(property.GetArrayElementAtIndex(index).objectReferenceValue); } 
-            catch (Exception e)  // @formatter:on
-            {
-                Debug.Log($"Item: {propertyPath} : {e}");
-                throw;
-            }
+            catch (Exception e) { Debug.Log($"Item: {propertyPath} : {e}"); throw; } // @formatter:on
 
             pf.AddToClassList("makeObjectItem");
             pf.AddToClassList("unity-base-field--no-label");
@@ -211,11 +200,7 @@ namespace instance.id.AAI.Editors
             }; // @formatter:off
             
             try {  pf.SetValueWithoutNotify(property.GetArrayElementAtIndex(index).objectReferenceValue); } 
-            catch (Exception e)  // @formatter:on
-            {
-                Debug.Log($"Item: {propertyPath} : {e}");
-                throw;
-            }
+            catch (Exception e){ Debug.Log($"Item: {propertyPath} : {e}"); throw; } // @formatter:on
 
             pf.AddToClassList("unity-base-field--no-label");
             pf.AddToClassList("makeToggleItem");
@@ -227,7 +212,7 @@ namespace instance.id.AAI.Editors
 
             return container;
         }
-        
+
         // ---------------------------------------------------- Build Object Objects
         // -- Build Object Objects -------------------------------------------------
         private VisualElement MakePropertyItem(SerializedProperty property, string propertyPath, int index, bool hideSelector = true)
@@ -247,11 +232,6 @@ namespace instance.id.AAI.Editors
 
             BuildContainers(container, index);
             container.Add(pf);
-
-            // if (hideSelector)
-            //     container
-            //         .Q(null, "unity-object-field__selector")
-            //         .RemoveFromClassList("unity-object-field__selector");
 
             return container;
         }
@@ -279,15 +259,12 @@ namespace instance.id.AAI.Editors
             var currentSize = childCount;
             var targetSize = arraySize;
             if (targetSize < currentSize)
-                for (var i = currentSize - 1; i >= targetSize; --i)
-                    RemoveAt(i);
+                for (var i = currentSize - 1; i >= targetSize; --i) RemoveAt(i);
             else if (targetSize > currentSize)
             {
                 for (var i = currentSize; i < targetSize; ++i) AddItem(m_ArrayProperty, $"{arrayPath}.Array.data[{i}]", i);
                 return true;
-            }
-
-            return false;
+            } return false;
         }
 
         // -------------------------------------------- SetValueWithoutNotify
@@ -305,18 +282,12 @@ namespace instance.id.AAI.Editors
                 if (arraySize == value) return;
                 if (panel != null)
                 {
-                    using (var evt = ChangeEvent<int>.GetPooled(arraySize, value))
-                    {
-                        evt.target = this;
-                        arraySize = value;
-                        SendEvent(evt);
-                        SetValueWithoutNotify(value);
-                    }
-                }
-                else
-                {
+                    using var evt = ChangeEvent<int>.GetPooled(arraySize, value);
+                    evt.target = this;
+                    arraySize = value;
+                    SendEvent(evt);
                     SetValueWithoutNotify(value);
-                }
+                } else SetValueWithoutNotify(value);
             }
         }
     }

@@ -8,7 +8,7 @@ namespace instance.id.AAI
 {
     [ExecuteInEditMode]
     [Serializable]
-    public class Example_Component : MonoBehaviour
+    public class ExampleComponent : MonoBehaviour
     {
         [UICategory("Character", 0, true)] public string characterName;
         [UICategory("Character", 0, true)] public string location;

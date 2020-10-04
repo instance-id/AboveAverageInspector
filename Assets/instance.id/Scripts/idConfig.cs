@@ -17,27 +17,36 @@ namespace instance.id.AAI
         static string stylesheetTerms = "t:StyleSheet AAI";
         static string layoutTerms = "t:VisualTreeAsset AAI";
         private static AAIConfiguration aaiConfiguration = null;
-        public static string idPath;
-        public static string objectPath;
-        public static StyleSheet[] stylesheets;
-        public static VisualTreeAsset[] layouts;
+        private static string idPath;
+        private static string objectPath;
+        private static StyleSheet[] stylesheets;
+        private static VisualTreeAsset[] layouts;
         private static Dictionary<string, StyleSheet> styleSheetDict = new Dictionary<string, StyleSheet>();
         private static Dictionary<string, VisualTreeAsset> layoutDict = new Dictionary<string, VisualTreeAsset>();
+        private static List<string> GetExclusionList() => AAIConfiguration().aaiTypeStringList;
 
-        public static List<string> GetExclusionList() => AAIConfiguration().aaiTypeStringList;
-        public static AAIConfiguration AAIConfiguration() // @formatter:off
+        // @formatter:off ----------------------------- SelectConfigObject
+        // -- Main menu item to select and configure AAI settings       --
+        // -- SelectConfigObject -----------------------------------------
+        [MenuItem("Tools/instance.id/Configure Settings", false)]
+        public static void SelectConfigObject() // @formatter:on
         {
-            try
-            {
-                if (!(aaiConfiguration is null))
-                    return aaiConfiguration;
-            }
+            Selection.objects = new Object[] {AAIConfiguration()};
+        }
+
+        // @formatter:off ----------------------------- SelectConfigObject
+        // -- Checks for existence of Configuration object              --
+        // -- If not present, one is created with default settings      --
+        // -- SelectConfigObject -----------------------------------------
+        public static AAIConfiguration AAIConfiguration()
+        {
+            try { if (!(aaiConfiguration is null)) return aaiConfiguration; }
             catch (Exception) { GetConfiguration(); }
             return aaiConfiguration;
         } // @formatter:on
 
-        // @formatter:off ------------------------------------------------------------------------- Debug flags
-        //  -- Debug flags ------------------------------------------------------------------------------------
+        // @formatter:off ------------------------------------ Debug flags
+        //  -- Debug flags -----------------------------------------------
         #region Debug
         public static bool configurationDebug
         { get { if (!(aaiConfiguration is null)) return aaiConfiguration.configurationDebug; return false; }
@@ -139,7 +148,10 @@ namespace instance.id.AAI
         private static VisualTreeAsset[] SearchLayouts()
         {
             aaiConfiguration.aaiLayouts.Clear();
-            var layout = AssetDatabase.FindAssets(layoutTerms).Select(guid => AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(AssetDatabase.GUIDToAssetPath(guid))).ToArray();
+            var layout = AssetDatabase.FindAssets(layoutTerms)
+                .Select(guid => AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(AssetDatabase.GUIDToAssetPath(guid)))
+                .ToArray();
+
             aaiConfiguration.aaiLayouts = layout.ToList();
             SaveAssetData(aaiConfiguration);
             return layout;
@@ -208,7 +220,10 @@ namespace instance.id.AAI
 
         private static StyleSheet[] SearchSheets()
         {
-            var sheets = AssetDatabase.FindAssets(stylesheetTerms).Select(guid => AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath(guid))).ToArray();
+            var sheets = AssetDatabase.FindAssets(stylesheetTerms)
+                .Select(guid => AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath(guid)))
+                .ToArray();
+
             aaiConfiguration.aaiStyleSheets = sheets.ToList();
             SaveAssetData();
             return sheets;

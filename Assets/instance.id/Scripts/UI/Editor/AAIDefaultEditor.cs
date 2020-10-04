@@ -7,7 +7,6 @@ using JetBrains.Annotations;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.Analytics;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 
@@ -26,20 +25,22 @@ namespace instance.id.AAI.Editors
         public VisualElement afterDefaultElements;
         public StyleSheet defaultStyleSheet;
         private List<Foldout> foldout;
-
-        public bool showScript;
         public List<string> excludedFields = new List<string>();
 
         // ReSharper disable once NotAccessedField.Local
         private string m_IMGUIPropNeedsRelayout;
         private ScrollView m_ScrollView;
 
-        protected SerializedDictionary<string, ClassData> classDataDictionary = new SerializedDictionary<string, ClassData>();
-        protected List<VisualElement> categoryList = new List<VisualElement>();
+        private List<VisualElement> categoryList = new List<VisualElement>();
         protected List<VisualElement> editorElements = new List<VisualElement>();
-        private List<VisualElement> expanders = new List<VisualElement>();
+        // ReSharper disable once CollectionNeverQueried.Local
+        private readonly List<VisualElement> expanders = new List<VisualElement>();
         private List<string> keyData = new List<string>();
 
+        private SerializedDictionary<string, ClassData>
+            classDataDictionary = new SerializedDictionary<string, ClassData>();
+
+        // -- Begin For future implementation ----------------------------
         private static readonly List<AAIDefaultEditor> s_ActiveInspectors;
 
         static AAIDefaultEditor()
@@ -54,7 +55,7 @@ namespace instance.id.AAI.Editors
                 inspector.Repaint();
             }
         }
-
+        // -- End For future implementation ------------------------------
 
         // @formatter:off -------------------------------------- Accessors
         // -- Virtual methods to be called from child classes           --
@@ -83,10 +84,10 @@ namespace instance.id.AAI.Editors
         // ------------------------------------------------------------ GetFieldData
         // -- Get field and type data from the editor target class                --
         // -- GetFieldData ---------------------------------------------------------
-        private SerializedDictionary<string, ClassData> GetFieldData(bool needsRefresh = true, bool displayData = false)
+        private SerializedDictionary<string, ClassData> GetFieldData()
         {
             if (idConfig.AAIConfiguration().refreshClassData) idConfig.AAIConfiguration().classDataDictionary = new SerializedDictionary<string, ClassData>();
-            needsRefresh = idConfig.AAIConfiguration().refreshClassData;
+            var needsRefresh = idConfig.AAIConfiguration().refreshClassData;
             var thisName = this.GetType().Name;
             var targetName = target.GetType().Name;
             var classDict = new SerializedDictionary<string, ClassData>();
@@ -127,11 +128,10 @@ namespace instance.id.AAI.Editors
 
             // -- Configure categories -----------------------------------
             var classData = classDict[targetName];
-            var fieldData = classData.fieldDatas;
 
             // -- Locate Default category, remove it, reorder the --------
             // -- categories as desired, replace Default at the end ------
-            UICategory defaultCategory = new UICategory("Default");
+            UICategory defaultCategory;
             try
             {
                 classData.categoryList = classData.categoryList.Where(x => !(x is null) || !x.category.StartsWith(" ")).ToList();
@@ -155,7 +155,7 @@ namespace instance.id.AAI.Editors
                 classData.categoryList.ForEach(x =>
                 {
                     bool expand;
-                    expand = idConfig.AAIConfiguration().expandCategoriesByDefault || x.expand;
+                    expand = idConfig.AAIConfiguration().expandCategoriesByDefault || x.expand || classData.categoryList.Count == 1;
 
                     VisualElement element = isAnimated
                         ? new Foldout {name = x.category, text = x.category, value = false}
@@ -176,14 +176,10 @@ namespace instance.id.AAI.Editors
         {
             if (Selection.activeObject is null || Selection.objects.Length == 0) return base.CreateInspectorGUI();
             if (!GetType().IsSubclassOf(typeof(ScriptableObject)) || categoryList is null || categoryList.Count == 0) return base.CreateInspectorGUI();
+            if (!idConfig.AAIConfiguration().enableCustomEditors) return base.CreateInspectorGUI();
 
-            if (!idConfig.AAIConfiguration().enableCustomEditors)
-            {
-                return base.CreateInspectorGUI();
-            }
-
-            var baseStyleSheet = idConfig.GetStyleSheet($"AAIDefaultEditorBase");
-            defaultStyleSheet ??= idConfig.GetStyleSheet($"AAIDefaultEditorStyle");
+            var baseStyleSheet = idConfig.GetStyleSheet("AAIDefaultEditorBase");
+            defaultStyleSheet ??= idConfig.GetStyleSheet("AAIDefaultEditorStyle");
             if (defaultStyleSheet is null) Debug.Log("Could not locate AAIDefaultEditorStyle");
 
             serializedObject.Update();
@@ -244,24 +240,21 @@ namespace instance.id.AAI.Editors
                     {
                         switch (propPath)
                         {
-                            case "m_Script" when serializedObject.targetObject
-                                                 != null:
-
-                                propertyField.visible = false;
+                            case "m_Script" when serializedObject.targetObject != null:
+                                propertyField.visible = false; // @formatter:off
                                 propertyField.SetEnabled(false);
                                 break;
                             default:
                                 if (property.IsReallyArray() && serializedObject.targetObject != null)
                                 {
                                     var copiedProperty = property.Copy();
-                                    var imDefaultProperty = new IMGUIContainer(() => { DoDrawDefaultIMGUIProperty(serializedObject, copiedProperty); })
-                                        {name = propPath};
-
+                                    var imDefaultProperty = new IMGUIContainer(() =>
+                                        {
+                                            DoDrawDefaultIMGUIProperty(serializedObject, copiedProperty);
+                                        }) {name = propPath};
                                     m_ScrollView.Add(imDefaultProperty);
-                                    continue;
                                 }
-
-                                break;
+                                break; // @formatter:on
                         }
                     }
                     else
@@ -351,8 +344,6 @@ namespace instance.id.AAI.Editors
                             // -- Dictionary Elements --------------------
                             case { } a when typeof(IDictionary).IsAssignableFrom(a.FieldType):
                             case { } b when typeof(IDictionary).IsSubclassOf(b.FieldType):
-                                if (defaultEditorDebug) Debug.Log($"Dictionary: {propPath}");
-
                                 var dictionaryFoldout = new Foldout {text = property.displayName};
                                 dictionaryFoldout.AddToClassList("arrayFoldout");
                                 dictionaryFoldout.value = false;
@@ -367,8 +358,6 @@ namespace instance.id.AAI.Editors
                             case { } b when typeof(IList).IsSubclassOf(b.FieldType):
                             case { } c when typeof(ISet<>).IsAssignableFrom(c.FieldType):
                             case { } d when typeof(ISet<>).IsSubclassOf(d.FieldType):
-                                if (defaultEditorDebug) Debug.Log($"List: {propPath}");
-
                                 var arrayElementBuilder = new ArrayElementBuilder(property, propertyData);
                                 propertyRow.Add(arrayElementBuilder);
                                 boxContainer.Q(propertyData.categoryAttr.category).Add(propertyRow);
@@ -391,7 +380,6 @@ namespace instance.id.AAI.Editors
                                 propertyRow.Add(propertyObjectLabel);
                                 propertyRow.Add(propertyObjectField);
                                 boxContainer.Q(propertyData.categoryAttr.category).Add(propertyRow);
-                                if (defaultEditorDebug) Debug.Log($"Objects: {propPath}");
                                 if (defaultEditorDebug)
                                     Debug.Log($"Fallback Test: Name: {propPath} Type: {property.type} Array: {property.isArray} : {property.propertyType}");
                                 break;
@@ -400,34 +388,35 @@ namespace instance.id.AAI.Editors
                                 {
                                     propertyColumn.Add(propertyField);
                                     boxContainer.Q(propertyData.categoryAttr.category).Add(propertyColumn);
-                                }
-                                else propertyColumn.Add(propertyField);
-
-                                if (defaultEditorDebug) Debug.Log($"Fallback: {propPath}");
+                                } else propertyColumn.Add(propertyField);
                                 boxContainer.Q(propertyData.categoryAttr.category).Add(propertyColumn);
                                 break;
                         }
                     }
                 } while (property.NextVisible(false));
             }
-
             #endregion
 
-
-            foreach (var foldout in m_ScrollView.Query<Foldout>().ToList())
+            foreach (var foldoutList in m_ScrollView.Query<Foldout>().ToList())
             {
-                foldout.RegisterValueChangedCallback(e =>
+                foldoutList.RegisterValueChangedCallback(e =>
                 {
-                    var fd = e.target as Foldout;
-                    if (fd == null) return;
+                    if (!(e.target is Foldout fd)) return;
                     var path = fd.bindingPath;
                     var container = m_ScrollView.Q<IMGUIContainer>(path);
                     RecomputeSize(container);
                 });
             }
 
-            var defaultCategory = categoryList
-                .FirstOrDefault(x => x.name == "Default");
+            VisualElement defaultCategory = null;
+            for (var i = 0; i < categoryList.Count; i++)
+            {
+                var x = categoryList[i];
+                if (x.name != "Default") continue;
+                defaultCategory = x;
+                break;
+            }
+
             if (defaultCategory.childCount == 0) defaultCategory.style.display = DisplayStyle.None;
 
             foldout = boxContainer.Query<Foldout>().ToList();
@@ -443,6 +432,8 @@ namespace instance.id.AAI.Editors
                     if (content.Count == 0) return;
 
                     var categoryExpander = new UIElementExpander();
+                    expanders.Add(categoryExpander);
+
                     content.ForEach(c =>
                     {
                         c.RemoveFromHierarchy();
@@ -464,55 +455,6 @@ namespace instance.id.AAI.Editors
                     x.Add(categoryExpander);
                 }
             });
-
-            // if (idConfig.AAIConfiguration().enableAnimation)
-            // {
-            //     categoryList.ForEach(x =>
-            //     {
-            //         if (x is null) return;
-            //         var categoryFoldout = (Foldout) x;
-            //
-            //         var content = categoryFoldout.Children().ToList();
-            //         if (content.Count == 0) return;
-            //
-            //         var categoryExpander = new UIElementExpander();
-            //         content.ForEach(c =>
-            //         {
-            //             c.RemoveFromHierarchy();
-            //             categoryExpander.AddToGroup(c);
-            //         });
-            //         categoryExpander.name = $"{x.name}Expander";
-            //
-            //         x.RegisterCallback((ChangeEvent<bool> evt) =>
-            //         {
-            //             if (evt.target == x)
-            //             {
-            //                 categoryExpander.Activate(evt.newValue);
-            //                 evt.StopPropagation();
-            //             }
-            //
-            //             else categoryExpander.TriggerValueChange(true);
-            //         });
-            //
-            //         x.ToggleInClassList("categoryFoldoutClosed");
-            //
-            //         // var testFoldout = new Foldout() {text = x.name};
-            //         // categoryExpander.shownItem = testFoldout;
-            //         x.Add(categoryExpander);
-            //         // categoryFoldout.Add(testFoldout);
-            //     });
-            // }
-
-            // var foldoutToggle = categoryFoldout.Q<Toggle>(className: Foldout.toggleUssClassName);
-            // var foldoutLabel = foldoutToggle.Q<Label>(className: Toggle.textUssClassName);
-            // x.RegisterCallback((GeometryChangedEvent evt) =>
-            // {
-            //     if (evt.currentTarget != x)
-            //     {
-            //         categoryExpander.TriggerGeometryChange(evt);
-            //         evt.StopPropagation();
-            //     }
-            // });
 
             serializedObject.ApplyModifiedProperties();
 
@@ -541,16 +483,24 @@ namespace instance.id.AAI.Editors
             var buttons = defaultRoot.Query<Button>().ToList();
             var secondData = classDataDictionary[keyData[1]];
             if (buttons.Count > 0)
-                if (!(secondData is null))
-                    secondData.fieldDatas.ForEach(x =>
+            {
+                secondData?.fieldDatas.ForEach(x =>
+                {
+                    var category = defaultRoot.Q<Foldout>(x.Value.categoryAttr.category);
+                    Button button = null;
+                    for (var i = 0; i < buttons.Count; i++)
                     {
-                        var category = defaultRoot.Q<Foldout>(x.Value.categoryAttr.category);
-                        var button = buttons.FirstOrDefault(b => b.name == x.Value.name);
-                        if (button == null) return;
+                        var b = buttons[i];
+                        if (b.name != x.Value.name) continue;
+                        button = b;
+                        break;
+                    }
+                    if (button == null) return;
 
-                        button.RemoveFromHierarchy();
-                        category.Add(button);
-                    });
+                    button.RemoveFromHierarchy();
+                    category.Add(button);
+                });
+            }
 
             ExecutePostBuildTask();
         }
@@ -571,15 +521,15 @@ namespace instance.id.AAI.Editors
                 var categoryFoldout = (Foldout) x;
                 var catList = classDataDictionary[keyData[0]].categoryList;
                 UICategory category = null;
-                for (var index = 0; index < catList.Count; index++)
+                for (var i = 0; i < catList.Count; i++)
                 {
-                    var e = catList[index];
+                    var e = catList[i];
                     if (e.category != categoryFoldout.name) continue;
                     category = e;
                     break;
                 }
 
-                var isExpanded = category != null && category.expand;
+                var isExpanded = category != null && category.expand || categoryList.Count == 1;
                 categoryFoldout.SetValueWithoutNotify(idConfig.AAIConfiguration().expandCategoriesByDefault || isExpanded);
 
                 var delayedTime = (long) (index * 0.13 * 1000); // @formatter:off
@@ -587,22 +537,9 @@ namespace instance.id.AAI.Editors
                 {
                     categoryFoldout.Q<UIElementExpander>().Activate(categoryFoldout.value);
                 }).StartingIn(delayedTime);
-                index++;
-                // @formatter:on
+                index++; // @formatter:on
             });
         }
-
-        // @formatter:off ------------------------------- categoryToggleCB
-        // -- In place of using a hover state, as this actually worked  --
-        // -- categoryToggleCB -------------------------------------------
-        private void categoryToggleCB(ChangeEvent<bool> evt)
-        {
-            if (defaultEditorDebug) Debug.Log($"Event: {evt.newValue.ToString()}");
-            if (evt.newValue)
-                foldout.ForEach(x => x.RemoveFromClassList("categoryFoldoutClosed"));
-            else foldout.ForEach(x => x.AddToClassList("categoryFoldoutClosed"));
-        } // @formatter:on
-
 
         // @formatter:off ------------------------------------- AddEntries
         // -- AddEntries -------------------------------------------------

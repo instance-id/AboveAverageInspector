@@ -1,6 +1,5 @@
 ﻿using System;
 using JetBrains.Annotations;
-using UnityEditor;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
 
@@ -8,16 +7,15 @@ namespace instance.id.AAI.Extensions
 {
     public class UIElementExpander : VisualElement
     {
-        ValueAnimation<StyleValues> m_FoldoutAnimation;
+        ValueAnimation<StyleValues> foldoutAnimation;
         private readonly Toggle expandToggle;
         private readonly VisualElement expandContainerItems;
         public VisualElement shownItem;
-        public EditorWindow window;
         [CanBeNull] public Action expandTrigger;
         private int tmpAnimTime = 0;
 
         public bool startExpanded { get; set; } = false;
-        private bool firstStart;
+        private bool firstStart = false;
 
         private int m_AnimationTime = 500;
 
@@ -52,11 +50,6 @@ namespace instance.id.AAI.Extensions
             expandToggle.value = value;
         }
 
-        public void Activate(bool value, int animTime)
-        {
-            expandToggle.value = value;
-        }
-
         public void AddToGroup(VisualElement element)
         {
             expandContainerItems.Add(element);
@@ -82,10 +75,10 @@ namespace instance.id.AAI.Extensions
             if (style.display == DisplayStyle.None) style.display = DisplayStyle.Flex;
             if (expandContainerItems.style.display == DisplayStyle.None) expandContainerItems.style.display = DisplayStyle.Flex;
 
-            if (m_FoldoutAnimation != null)
+            if (foldoutAnimation != null)
             {
-                m_FoldoutAnimation.Recycle();
-                m_FoldoutAnimation = null;
+                foldoutAnimation.Recycle();
+                foldoutAnimation = null;
             }
 
             if (evt.newValue)
@@ -95,9 +88,9 @@ namespace instance.id.AAI.Extensions
             }
             else
             {
-                m_FoldoutAnimation =
+                foldoutAnimation =
                     expandContainerItems.experimental.animation.Start(new StyleValues {height = expandContainerItems.layout.height}, new StyleValues {height = 0}, animationTime);
-                m_FoldoutAnimation.KeepAlive(); // Prevent it being reused when the animation is finished else an error may be thrown when we try to check if it has finished.
+                foldoutAnimation.KeepAlive(); // Prevent it being reused when the animation is finished else an error may be thrown when we try to check if it has finished.
             }
         }
 
@@ -106,10 +99,10 @@ namespace instance.id.AAI.Extensions
             if (style.display == DisplayStyle.None) style.display = DisplayStyle.Flex;
             if (expandContainerItems.style.display == DisplayStyle.None) expandContainerItems.style.display = DisplayStyle.Flex;
 
-            if (m_FoldoutAnimation != null)
+            if (foldoutAnimation != null)
             {
-                m_FoldoutAnimation.Recycle();
-                m_FoldoutAnimation = null;
+                foldoutAnimation.Recycle();
+                foldoutAnimation = null;
             }
 
             if (evt)
@@ -119,15 +112,15 @@ namespace instance.id.AAI.Extensions
             }
             else
             {
-                m_FoldoutAnimation =
+                foldoutAnimation =
                     expandContainerItems.experimental.animation.Start(new StyleValues {height = expandContainerItems.layout.height}, new StyleValues {height = 0}, animationTime);
-                m_FoldoutAnimation.KeepAlive(); // Prevent it being reused when the animation is finished else an error may be thrown when we try to check if it has finished.
+                foldoutAnimation.KeepAlive(); // Prevent it being reused when the animation is finished else an error may be thrown when we try to check if it has finished.
             }
         }
 
         void OnGeometryChangedEvent(GeometryChangedEvent evt)
         {
-            m_FoldoutAnimation =
+            foldoutAnimation =
                 expandContainerItems.experimental.animation.Start(
                     new StyleValues {height = evt.oldRect.height},
                     new StyleValues {height = evt.newRect.height},
@@ -135,7 +128,7 @@ namespace instance.id.AAI.Extensions
 
             expandContainerItems.style.height = evt.oldRect.height;
 
-            m_FoldoutAnimation.KeepAlive();
+            foldoutAnimation.KeepAlive();
             expandContainerItems.UnregisterCallback<GeometryChangedEvent>(OnGeometryChangedEvent);
         }
     }
