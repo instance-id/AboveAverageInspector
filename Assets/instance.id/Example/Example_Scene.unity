@@ -178,26 +178,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Example_Categories
       objectReference: {fileID: 0}
-    - target: {fileID: 623565581246034211, guid: afc76c299e0f3a44f9fb8b62a48fcd9d, type: 3}
-      propertyPath: characterName
-      value: BossKiller
-      objectReference: {fileID: 0}
-    - target: {fileID: 623565581246034211, guid: afc76c299e0f3a44f9fb8b62a48fcd9d, type: 3}
-      propertyPath: location
-      value: OutOfAggro
-      objectReference: {fileID: 0}
-    - target: {fileID: 623565581246034211, guid: afc76c299e0f3a44f9fb8b62a48fcd9d, type: 3}
-      propertyPath: health
-      value: 10000
-      objectReference: {fileID: 0}
-    - target: {fileID: 623565581246034211, guid: afc76c299e0f3a44f9fb8b62a48fcd9d, type: 3}
-      propertyPath: mana
-      value: 10000
-      objectReference: {fileID: 0}
-    - target: {fileID: 623565581246034211, guid: afc76c299e0f3a44f9fb8b62a48fcd9d, type: 3}
-      propertyPath: lives
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: afc76c299e0f3a44f9fb8b62a48fcd9d, type: 3}
 --- !u!1001 &6371426038950804507
@@ -210,26 +190,6 @@ PrefabInstance:
     - target: {fileID: 6371426038590339096, guid: 035eeae734c01cb45b50f0e61e4990d3, type: 3}
       propertyPath: m_Name
       value: Example2_NoCategories
-      objectReference: {fileID: 0}
-    - target: {fileID: 6371426038590339101, guid: 035eeae734c01cb45b50f0e61e4990d3, type: 3}
-      propertyPath: location
-      value: OutOfAggro
-      objectReference: {fileID: 0}
-    - target: {fileID: 6371426038590339101, guid: 035eeae734c01cb45b50f0e61e4990d3, type: 3}
-      propertyPath: characterName
-      value: BossKiller
-      objectReference: {fileID: 0}
-    - target: {fileID: 6371426038590339101, guid: 035eeae734c01cb45b50f0e61e4990d3, type: 3}
-      propertyPath: health
-      value: 10000
-      objectReference: {fileID: 0}
-    - target: {fileID: 6371426038590339101, guid: 035eeae734c01cb45b50f0e61e4990d3, type: 3}
-      propertyPath: mana
-      value: 10000
-      objectReference: {fileID: 0}
-    - target: {fileID: 6371426038590339101, guid: 035eeae734c01cb45b50f0e61e4990d3, type: 3}
-      propertyPath: lives
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6371426038590339102, guid: 035eeae734c01cb45b50f0e61e4990d3, type: 3}
       propertyPath: m_LocalPosition.x
