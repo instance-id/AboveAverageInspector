@@ -456,9 +456,9 @@ namespace instance.id.AAI.Editors
                             categoryExpander.Activate(evt.newValue);
 
                             evt.StopPropagation();
-                            contentContainer.style.display = DisplayStyle.Flex;
-                            if (!evt.newValue)
-                                contentContainer.schedule.Execute(() => { contentContainer.style.display = DisplayStyle.None; }).StartingIn(500);
+                            // contentContainer.style.display = DisplayStyle.Flex;
+                            // if (!evt.newValue)
+                            //     contentContainer.schedule.Execute(() => { contentContainer.style.display = DisplayStyle.None; }).StartingIn(500);
                         }
                         else categoryExpander.TriggerValueChange(true);
                     });
