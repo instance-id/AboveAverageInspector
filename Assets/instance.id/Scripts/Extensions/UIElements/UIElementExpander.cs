@@ -1,4 +1,9 @@
-﻿using System;
+﻿// ----------------------------------------------------------------------------
+// -- Project : https://github.com/instance-id/AboveAverageInspector         --
+// -- instance.id 2020 | http://github.com/instance-id | http://instance.id  --
+// ----------------------------------------------------------------------------
+
+using System;
 using JetBrains.Annotations;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;

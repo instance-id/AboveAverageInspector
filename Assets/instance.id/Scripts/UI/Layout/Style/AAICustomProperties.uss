@@ -1,7 +1,7 @@
-/* --------------------------------------------------------
-   AAICustomProperties.uss                         --
-   ----------------------------------------------------- */
-
+/* ----------------------------------------------------------------------------
+// -- Project : https://github.com/instance-id/AboveAverageInspector         --
+// -- instance.id 2020 | http://github.com/instance-id | http://instance.id  --
+// -- AAICustomProperties.uss ---------------------------------------------- */
 
 /* -------------------------------------- Serial Dictionary
    Serial Dictionary ----------------------------------- */
@@ -49,7 +49,7 @@
    Unity Default Overrides ----------------------------- */
 
 .unity-property-field__label {
-  display: none;
+    display: none;
 }
 
 .unity-scroll-view {

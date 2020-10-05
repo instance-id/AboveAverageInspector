@@ -1,4 +1,9 @@
-﻿using System;
+﻿// ----------------------------------------------------------------------------
+// -- Project : https://github.com/instance-id/AboveAverageInspector         --
+// -- instance.id 2020 | http://github.com/instance-id | http://instance.id  --
+// ----------------------------------------------------------------------------
+
+using System;
 using UnityEngine;
 
 namespace instance.id.AAI

@@ -24,16 +24,26 @@ Uncategorized fields are automatically placed in a "Default" category.
 
 
 ## Compatibility with other Inspector modifications (Odin Inspector, possibly others, etc)
-Odin Inspector also injects it's drawers into default Unity inspectors. Above-Average Inspector is not forceful about it. As such, once Odin Inspector is added to a project it's drawers overtake as the default inspector drawer. 
+Odin Inspector injects it's drawers into default Unity inspectors. Above-Average Inspector is not forceful about it. As such, once Odin Inspector is added to a project it's drawers overtake as the default inspector drawer. 
 
 If you would like AAI to still draw it's inspector changes, for whatever MonoBehaviours or ScriptableObjects you would like to use AAI you can create a simple CustomEditor for that object deriving from the AAIDefaultEditor and place it into any 'Editor' folder.
 
 Using the included ExampleComponent in this project, if you would like to use AAI's drawer over Odin, follow these steps:
 
+```
+NOTE:
+ I could make this a selectable and automated process with code generation. 
+ 
+ I am interested to hear if anyone would like this or if just creating them manually 
+ and having the control is preferred.)
+```
+
 1. In the 'Assets' folder of your project, create a new folder called 'Editor'
 2. Within Assets/Editor, create a new script called "ExampleComponentEditor" 
 3. Place the following code in the script):
 
+
+Example is located in: Assets/instance.id/Example/Scripts/Editor/ExampleComponentEditor.cs
 ```cs
 using UnityEditor;
 

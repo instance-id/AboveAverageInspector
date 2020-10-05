@@ -33,6 +33,7 @@ namespace instance.id.AAI.Editors
 
         private List<VisualElement> categoryList = new List<VisualElement>();
         protected List<VisualElement> editorElements = new List<VisualElement>();
+
         // ReSharper disable once CollectionNeverQueried.Local
         private readonly List<VisualElement> expanders = new List<VisualElement>();
         private List<string> keyData = new List<string>();
@@ -388,13 +389,16 @@ namespace instance.id.AAI.Editors
                                 {
                                     propertyColumn.Add(propertyField);
                                     boxContainer.Q(propertyData.categoryAttr.category).Add(propertyColumn);
-                                } else propertyColumn.Add(propertyField);
+                                }
+                                else propertyColumn.Add(propertyField);
+
                                 boxContainer.Q(propertyData.categoryAttr.category).Add(propertyColumn);
                                 break;
                         }
                     }
                 } while (property.NextVisible(false));
             }
+
             #endregion
 
             foreach (var foldoutList in m_ScrollView.Query<Foldout>().ToList())
@@ -495,10 +499,11 @@ namespace instance.id.AAI.Editors
                         button = b;
                         break;
                     }
+
                     if (button == null) return;
 
                     button.RemoveFromHierarchy();
-                    category.Add(button);
+                    category?.Add(button);
                 });
             }
 
@@ -535,7 +540,7 @@ namespace instance.id.AAI.Editors
                 var delayedTime = (long) (index * 0.13 * 1000); // @formatter:off
                 defaultRoot.schedule.Execute(e =>
                 {
-                    categoryFoldout.Q<UIElementExpander>().Activate(categoryFoldout.value);
+                    categoryFoldout.Q<UIElementExpander>()?.Activate(categoryFoldout.value);
                 }).StartingIn(delayedTime);
                 index++; // @formatter:on
             });

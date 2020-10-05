@@ -1,4 +1,9 @@
-﻿using System;
+﻿// ----------------------------------------------------------------------------
+// -- Project : https://github.com/instance-id/AboveAverageInspector         --
+// -- instance.id 2020 | http://github.com/instance-id | http://instance.id  --
+// ----------------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,20 +24,25 @@ namespace instance.id.AAI
 
         // @formatter:off ------------------------ Main Settings
         // -- Main Settings ------------------------------------
-        public bool expandCategoriesByDefault;
+
+                // -------------------------------------------- Settings
+        // -- Settings -----------------------------------------
+        [UICategory("AAI Settings", 0)] public bool enableAnimation;
+        [UICategory("AAI Settings", 0)] public bool expandCategoriesByDefault;
+        [UICategory("AAI Settings", 0)] public bool enableCustomEditors;
 
         // @formatter:off ----------------- Location Data Fields
         // -- Location Data Fields -----------------------------
-        [UICategory("Config Paths", 0)] public string location;
-        [UICategory("Config Paths", 0)] public string pathString;
-        [UICategory("Config Paths", 0)] public string objectPath;
-        [UICategory("Config Paths", 0)] public string stylePath;
+        [UICategory("AAI Paths", 1), ReadOnly] public string location;
+        [UICategory("AAI Paths", 1)] public string pathString;
+        [UICategory("AAI Paths", 1)] public string objectPath;
+        [UICategory("AAI Paths", 1)] public string stylePath;
 
         // ---------------------------------------------- Styles
         // -- Styles -------------------------------------------
-        [UICategory("Styles",1)] [SerializeField] public List<StyleSheet> aaiStyleSheets = new List<StyleSheet>();
-        [UICategory("Styles",1)] [SerializeField] [Dictionary] public SerializedDictionary<string,StyleSheet> aaiStyleSheetsDictionary = new SerializedDictionary<string,StyleSheet>();
-        [UICategory("Styles",1)] [SerializeField] public List<VisualTreeAsset> aaiLayouts = new List<VisualTreeAsset>();
+        [UICategory("Styles",2)] [SerializeField] public List<StyleSheet> aaiStyleSheets = new List<StyleSheet>();
+        [UICategory("Styles",2)] [SerializeField] [Dictionary] public SerializedDictionary<string,StyleSheet> aaiStyleSheetsDictionary = new SerializedDictionary<string,StyleSheet>();
+        [UICategory("Styles",2)] [SerializeField] public List<VisualTreeAsset> aaiLayouts = new List<VisualTreeAsset>();
 
         [UICategory("Class Data",3)] [SerializeField] public List<string> aaiTypeStringList = new List<string>();
         [UICategory("Class Data",3)] [SerializeField] public List<Type> aaiTypeList = new List<Type>();
@@ -41,16 +51,14 @@ namespace instance.id.AAI
 
         public Dictionary<string, Type> drawerTypesDictionary = new Dictionary<string, Type>();
         [HideInInspector] public SerializedDictionary<string, ClassData> classDataDictionary = new SerializedDictionary<string, ClassData>();
-        public bool refreshClassData;
-        public bool enableCustomEditors;
-        public bool enableAnimation;
+        [HideInInspector] public bool refreshClassData;
         private int foundTypes;
 
         // @formatter:off -------------------------- Debug flags
         // -- Debug flags --------------------------------------
-        [UICategory("Debug",5)]  public bool configurationDebug;
-        [UICategory("Debug",5)]  public bool defaultEditorDebug;
-        [UICategory("Debug",5)]  public bool idConfigDebug;
+        [UICategory("Debug",4)]  public bool configurationDebug;
+        [UICategory("Debug",4)]  public bool defaultEditorDebug;
+        [UICategory("Debug",4)]  public bool idConfigDebug;
 
         // @formatter:on ------------------------ Method Getters
         // -- Method Getters -----------------------------------
