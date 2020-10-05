@@ -426,11 +426,15 @@ namespace instance.id.AAI.Editors
             foldout = boxContainer.Query<Foldout>().ToList();
             foldout.ForEach(x =>
             {
-                x.Q<Toggle>().ToggleInClassList("categoryFoldoutClosed");
+                var toggleItem = x.Q<Toggle>();
+                toggleItem.ToggleInClassList("categoryFoldoutClosed");
                 x.Q(null, "unity-toggle__checkmark").AddToClassList("toggleCheckmark");
 
                 if (idConfig.AAIConfiguration().enableAnimation)
                 {
+                    toggleItem.UnregisterCallback((ChangeEvent<bool> evt) => { });
+                    var contentContainer = x.Q(null, Foldout.contentUssClassName);
+
                     var categoryFoldout = x;
                     var content = categoryFoldout.Children().ToList();
                     if (content.Count == 0) return;
@@ -450,7 +454,11 @@ namespace instance.id.AAI.Editors
                         if (evt.target == x)
                         {
                             categoryExpander.Activate(evt.newValue);
+
                             evt.StopPropagation();
+                            contentContainer.style.display = DisplayStyle.Flex;
+                            if (!evt.newValue)
+                                contentContainer.schedule.Execute(() => { contentContainer.style.display = DisplayStyle.None; }).StartingIn(500);
                         }
                         else categoryExpander.TriggerValueChange(true);
                     });
