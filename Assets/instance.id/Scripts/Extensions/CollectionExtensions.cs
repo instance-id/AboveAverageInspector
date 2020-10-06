@@ -5,6 +5,8 @@
 
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace instance.id.AAI.Extensions
 {
@@ -51,6 +53,33 @@ namespace instance.id.AAI.Extensions
             if (list.Contains(value)) return false;
             list.Add(value);
             return true;
+        }
+
+        // ------------------------------------------------------------------------- List Functions
+        // -- List Functions ----------------------------------------------------------------------
+        public static bool TryAddCategory<TValue>(this List<TValue> list, TValue value)
+        {
+            Debug.Log($"TValue: {typeof(TValue).ToString()} value: {value.GetType().ToString()} ");
+
+            if (value.GetType() == typeof(VisualElement))
+                if (list.Exists(x => x.Cast<VisualElement>().name == value.Cast<VisualElement>().name))
+                    return false;
+                else
+                {
+                    list.Add(value);
+                    return true;
+                }
+
+            else if (value.GetType() == typeof(Foldout))
+                if (list.Exists(x => x.Cast<Foldout>().name == value.Cast<Foldout>().name))
+                    return false;
+                else
+                {
+                    list.Add(value);
+                    return true;
+                }
+
+            return false;
         }
     }
 }

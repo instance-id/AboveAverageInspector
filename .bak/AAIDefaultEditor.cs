@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,19 +13,18 @@ using Object = UnityEngine.Object;
 namespace instance.id.AAI.Editors
 {
     [CanEditMultipleObjects]
-    // [CustomEditor(typeof(Object), true, isFallback = true)]
+    [CustomEditor(typeof(Object), true, isFallback = true)]
     public class AAIDefaultEditor : Editor
     {
         // -- Visual Elements --------------------------------------------
         protected VisualElement defaultRoot;
         public bool defaultEditorDebug;
-        private bool isAnimated;
 
         // -- Containers for custom elements from deriving classes -------
         public VisualElement beforeDefaultElements;
         public VisualElement afterDefaultElements;
         public StyleSheet defaultStyleSheet;
-        private List<dynamic> foldout = new List<dynamic>();
+        private List<Foldout> foldout;
         public List<string> excludedFields = new List<string>();
 
         // ReSharper disable once NotAccessedField.Local
@@ -147,32 +146,32 @@ namespace instance.id.AAI.Editors
                 return null;
             }
 
-            isAnimated = idConfig.AAIConfiguration().enableAnimation;
+            var isAnimated = idConfig.AAIConfiguration().enableAnimation;
             if (classData.categoryList.Count < 1) return classDict;
             {
                 classData.categoryList.RemoveAll(x => Equals(x, defaultCategory));
                 classData.categoryList = classData.categoryList.OrderBy(x => x.order).ToList();
-                classData.categoryList.TryAddValue(defaultCategory);
+                classData.categoryList.Add(defaultCategory);
 
                 classData.categoryList.ForEach(x =>
                 {
                     bool expand;
                     expand = idConfig.AAIConfiguration().expandCategoriesByDefault || x.expand || classData.categoryList.Count == 1;
 
-                    if (isAnimated)
-                    {
-                        var element = new AnimatedFoldout {name = x.category, text = x.category, value = false};
-                        if (!categoryList.Exists(x => x.name == element.name)) categoryList.TryAddValue(element);
-                    }
-                    else
-                    {
-                        var element = new Foldout {name = x.category, text = x.category, value = expand};
-                        if (!categoryList.Exists(x => x.name == element.name)) categoryList.TryAddValue(element);
-                    }
+                    VisualElement element = isAnimated
+                        ? new Foldout {name = x.category, text = x.category, value = false}
+                        : new Foldout {name = x.category, text = x.category, value = expand};
+                    categoryList.Add(element);
                 });
             }
             return classDict;
         }
+
+        // public void OnInspectorGUI(bool isScriptInspector, RectOffset margins, EditorWindow currentInspector)
+        // {
+        //     if (currentInspector)
+        //         this.currentInspector = currentInspector;
+        // }
 
         public override VisualElement CreateInspectorGUI()
         {
@@ -276,13 +275,6 @@ namespace instance.id.AAI.Editors
                                     bindingPath = propPath,
                                     name = $"{propPath}Text"
                                 };
-
-                                if (propertyData.categoryAttr.toolTip != "")
-                                {
-                                    propertyTextLabel.tooltip = propertyData.categoryAttr.toolTip;
-                                    propertyTextField.tooltip = propertyData.categoryAttr.toolTip;
-                                }
-
                                 propertyTextLabel.AddToClassList("propertyTextLabel");
                                 propertyTextField.AddToClassList("propertyTextField");
                                 propertyRow.Add(propertyTextLabel);
@@ -300,12 +292,6 @@ namespace instance.id.AAI.Editors
                                     bindingPath = propPath,
                                     name = $"{propPath}Integer"
                                 };
-
-                                if (propertyData.categoryAttr.toolTip != "")
-                                {
-                                    propertyIntegerLabel.tooltip = propertyData.categoryAttr.toolTip;
-                                    propertyIntegerField.tooltip = propertyData.categoryAttr.toolTip;
-                                }
                                 propertyIntegerLabel.AddToClassList("propertyIntegerLabel");
                                 propertyIntegerField.AddToClassList("propertyIntegerField");
                                 propertyRow.Add(propertyIntegerLabel);
@@ -324,12 +310,6 @@ namespace instance.id.AAI.Editors
                                     bindingPath = propPath,
                                     name = $"{propPath}Float"
                                 };
-
-                                if (propertyData.categoryAttr.toolTip != "")
-                                {
-                                    propertyFloatLabel.tooltip = propertyData.categoryAttr.toolTip;
-                                    propertyFloatField.tooltip = propertyData.categoryAttr.toolTip;
-                                }
                                 propertyFloatLabel.AddToClassList("propertyFloatLabel");
                                 propertyFloatField.AddToClassList("propertyFloatField");
                                 propertyRow.Add(propertyFloatLabel);
@@ -351,12 +331,6 @@ namespace instance.id.AAI.Editors
                                     name = $"{propPath}ToggleField"
                                 };
 
-                                if (propertyData.categoryAttr.toolTip != "")
-                                {
-                                    propertyToggleLabel.tooltip = propertyData.categoryAttr.toolTip;
-                                    propertyToggleField.tooltip = propertyData.categoryAttr.toolTip;
-                                }
-
                                 propertyToggleLabel.AddToClassList("propertyToggleLabel");
                                 propertyToggleLabel.AddToClassList("propertyToggleSpacer");
                                 propertyToggleField.AddToClassList("propertyToggleField");
@@ -375,12 +349,6 @@ namespace instance.id.AAI.Editors
                                 dictionaryFoldout.AddToClassList("arrayFoldout");
                                 dictionaryFoldout.value = false;
 
-                                if (propertyData.categoryAttr.toolTip != "")
-                                {
-                                    dictionaryFoldout.tooltip = propertyData.categoryAttr.toolTip;
-                                    propertyColumn.tooltip = propertyData.categoryAttr.toolTip;
-                                }
-
                                 dictionaryFoldout.Add(propertyField);
                                 propertyColumn.Add(dictionaryFoldout);
                                 boxContainer.Q(propertyData.categoryAttr.category).Add(propertyColumn);
@@ -392,12 +360,6 @@ namespace instance.id.AAI.Editors
                             case { } c when typeof(ISet<>).IsAssignableFrom(c.FieldType):
                             case { } d when typeof(ISet<>).IsSubclassOf(d.FieldType):
                                 var arrayElementBuilder = new ArrayElementBuilder(property, propertyData);
-
-                                if (propertyData.categoryAttr.toolTip != "")
-                                {
-                                    propertyRow.tooltip = propertyData.categoryAttr.toolTip;
-                                }
-
                                 propertyRow.Add(arrayElementBuilder);
                                 boxContainer.Q(propertyData.categoryAttr.category).Add(propertyRow);
                                 break;
@@ -414,13 +376,6 @@ namespace instance.id.AAI.Editors
                                     bindingPath = propPath,
                                     name = $"{propPath}ObjectField"
                                 };
-
-                                if (propertyData.categoryAttr.toolTip != "")
-                                {
-                                    propertyObjectLabel.tooltip = propertyData.categoryAttr.toolTip;
-                                    propertyObjectField.tooltip = propertyData.categoryAttr.toolTip;
-                                }
-
                                 propertyObjectLabel.AddToClassList("propertyObjectLabel");
                                 propertyObjectField.AddToClassList("propertyObjectField");
                                 propertyRow.Add(propertyObjectLabel);
@@ -436,11 +391,6 @@ namespace instance.id.AAI.Editors
                                     boxContainer.Q(propertyData.categoryAttr.category).Add(propertyColumn);
                                 }
                                 else propertyColumn.Add(propertyField);
-
-                                if (propertyData.categoryAttr.toolTip != "")
-                                {
-                                    propertyColumn.tooltip = propertyData.categoryAttr.toolTip;
-                                }
 
                                 boxContainer.Q(propertyData.categoryAttr.category).Add(propertyColumn);
                                 break;
@@ -465,10 +415,7 @@ namespace instance.id.AAI.Editors
             VisualElement defaultCategory = null;
             for (var i = 0; i < categoryList.Count; i++)
             {
-                VisualElement x;
-                if (isAnimated)
-                    x = categoryList[i].Q<AnimatedFoldout>();
-                else x = categoryList[i].Q<Foldout>();
+                var x = categoryList[i];
                 if (x.name != "Default") continue;
                 defaultCategory = x;
                 break;
@@ -476,46 +423,51 @@ namespace instance.id.AAI.Editors
 
             if (defaultCategory.childCount == 0) defaultCategory.style.display = DisplayStyle.None;
 
-            if (isAnimated)
-            {
-                var listItems = boxContainer.Query<AnimatedFoldout>().ToList();
-                listItems.ForEach(x => foldout.Add((AnimatedFoldout) x));
-            }
-            else
-            {
-                var listItems = boxContainer.Query<Foldout>().ToList();
-                listItems.ForEach(x => foldout.Add((Foldout) x));
-            }
-
+            foldout = boxContainer.Query<Foldout>().ToList();
             foldout.ForEach(x =>
             {
-                Toggle toggleItem;
-                if (isAnimated)
-                {
-                    var item = (AnimatedFoldout) x;
-                    toggleItem = item.Q<Toggle>(null, AnimatedFoldout.toggleUssClassName);
-                    toggleItem.ToggleInClassList("categoryFoldoutClosed");
-                    item.Q(null, "unity-toggle__checkmark").AddToClassList("toggleCheckmark");
-                    item.RegisterCallback((ChangeEvent<bool> evt) =>
-                    {
-                        if (evt.target == item)
-                        {
-                            item.expander.Activate(evt.newValue);
-                            if (evt.newValue)
-                                item.contentContainer.style.display = DisplayStyle.Flex;
+                var toggleItem = x.Q<Toggle>();
+                Debug.Log($"Toggle: {toggleItem.text}");
+                toggleItem.ToggleInClassList("categoryFoldoutClosed");
+                x.Q(null, "unity-toggle__checkmark").AddToClassList("toggleCheckmark");
 
-                            if (!evt.newValue)
-                                item.schedule.Execute(() => { item.contentContainer.style.display = DisplayStyle.None; }).StartingIn(0);
-                        }
-                        else item.expander.TriggerExpanderResize(true);
-                    });
-                }
-                else
+                if (idConfig.AAIConfiguration().enableAnimation)
                 {
-                    var item = (Foldout) x;
-                    toggleItem = item.Q<Toggle>();
-                    toggleItem.ToggleInClassList("categoryFoldoutClosed");
-                    item.Q(null, "unity-toggle__checkmark").AddToClassList("toggleCheckmark");
+                    toggleItem.UnregisterCallback((ChangeEvent<bool> evt) => { });
+                    var contentContainer = x.Q(null, Foldout.contentUssClassName);
+
+                    Debug.Log($"Content Container: {contentContainer.childCount}");
+
+                    var categoryFoldout = x;
+                    var content = categoryFoldout.Children().ToList();
+                    if (content.Count == 0) return;
+
+                    var categoryExpander = new UIElementExpander();
+                    expanders.Add(categoryExpander);
+
+                    content.ForEach(c =>
+                    {
+                        c.RemoveFromHierarchy();
+                        categoryExpander.AddToGroup(c);
+                    });
+                    categoryExpander.name = $"{x.name}Expander";
+
+                    x.RegisterCallback((ChangeEvent<bool> evt) =>
+                    {
+                        if (evt.target == x)
+                        {
+                            categoryExpander.Activate(evt.newValue);
+
+                            evt.StopPropagation();
+                            contentContainer.style.display = DisplayStyle.Flex;
+                            if (!evt.newValue)
+                                contentContainer.schedule.Execute(() => { contentContainer.style.display = DisplayStyle.None; }).StartingIn(500);
+                        }
+                        else categoryExpander.TriggerValueChange(true);
+                    });
+
+                    x.ToggleInClassList("categoryFoldoutClosed");
+                    x.Add(categoryExpander);
                 }
             });
 
@@ -582,9 +534,7 @@ namespace instance.id.AAI.Editors
             categoryList.ForEach(x =>
             {
                 if (x is null) return;
-                dynamic categoryFoldout;
-                if (isAnimated) categoryFoldout = (AnimatedFoldout) x;
-                else categoryFoldout = (Foldout) x;
+                var categoryFoldout = (Foldout) x;
                 var catList = classDataDictionary[keyData[0]].categoryList;
                 UICategory category = null;
                 for (var i = 0; i < catList.Count; i++)
@@ -598,23 +548,10 @@ namespace instance.id.AAI.Editors
                 var isExpanded = category != null && category.expand || categoryList.Count == 1;
                 categoryFoldout.SetValueWithoutNotify(idConfig.AAIConfiguration().expandCategoriesByDefault || isExpanded);
 
-                // -- This creates a cascading expansion effect starting with the first category
-                // -- delaying the expansion of the subsequent categories by the delayValue * 1000 (equates to milliseconds)
-                var delayValue = 0.13;
-                var delayedTime = (long) (index * delayValue * 1000); // @formatter:on
+                var delayedTime = (long) (index * 0.13 * 1000); // @formatter:off
                 defaultRoot.schedule.Execute(e =>
                 {
-                    if (isAnimated)
-                    {
-                        var foldoutItem = (AnimatedFoldout) categoryFoldout;
-                        foldoutItem.SetValueWithoutNotify(categoryFoldout.value);
-                        foldoutItem.expander.Activate(categoryFoldout.value);
-                    }
-                    else
-                    {
-                        var foldoutItem = (Foldout) categoryFoldout;
-                        foldoutItem.SetValueWithoutNotify(categoryFoldout.value);
-                    }
+                    categoryFoldout.Q<UIElementExpander>()?.Activate(categoryFoldout.value);
                 }).StartingIn(delayedTime);
                 index++; // @formatter:on
             });

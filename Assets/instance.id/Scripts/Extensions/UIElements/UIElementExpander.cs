@@ -10,7 +10,7 @@ using UnityEngine.UIElements.Experimental;
 
 namespace instance.id.AAI.Extensions
 {
-    public class UIElementExpander : VisualElement
+    public class Expander : VisualElement
     {
         ValueAnimation<StyleValues> foldoutAnimation;
         private readonly Toggle expandToggle;
@@ -30,12 +30,17 @@ namespace instance.id.AAI.Extensions
             [UsedImplicitly] set => m_AnimationTime = value;
         }
 
-        public UIElementExpander()
+        public Expander()
         {
             expandToggle = new Toggle {style = {display = DisplayStyle.None}, name = "ExpandToggle"};
             expandToggle.RegisterValueChangedCallback(ExpandContainerValueChanges);
 
-            expandContainerItems = new VisualElement {style = {overflow = Overflow.Hidden}};
+            expandContainerItems = new VisualElement
+            {
+                name = "expandContainer",
+                style = {overflow = Overflow.Hidden}
+            };
+            expandContainerItems.AddToClassList("expandContainer");
             expandContainerItems.Add(shownItem);
 
             Add(expandToggle);
@@ -55,27 +60,39 @@ namespace instance.id.AAI.Extensions
             expandToggle.value = value;
         }
 
-        public void AddToGroup(VisualElement element)
+        /// <summary>
+        /// Add elements to expansion group. Elements that are added will be displayed when Expander is expanded, and hidden when collapsed.
+        /// </summary>
+        /// <param name="element">A single element or container which will be added to the expansion group</param>
+        public void AddToExpansionGroup(VisualElement element)
         {
             expandContainerItems.Add(element);
         }
 
-        public void TriggerValueChange(ChangeEvent<bool> eventValue)
+        public void TriggerExpanderResize(ChangeEvent<bool> eventValue)
         {
             ExpandContainerValueChanges(eventValue);
         }
 
-        public void TriggerValueChange(bool eventValue)
+        /// <summary>
+        /// Trigger the expansion container to resize. Needed when child elements change size.
+        /// </summary>
+        /// <param name="eventValue">Default is true, which will make the container resize. If false, container will animate closed</param>
+        public void TriggerExpanderResize(bool eventValue = true)
         {
             ExpandContainerValueChanges(eventValue);
         }
 
+        /// <summary>
+        /// Manually trigger the OnGeometryChangedEvent event.
+        /// </summary>
+        /// <param name="eventValue">GeometryChangedEvent</param>
         public void TriggerGeometryChange(GeometryChangedEvent eventValue)
         {
             OnGeometryChangedEvent(eventValue);
         }
 
-        void ExpandContainerValueChanges(ChangeEvent<bool> evt)
+        private void ExpandContainerValueChanges(ChangeEvent<bool> evt)
         {
             if (style.display == DisplayStyle.None) style.display = DisplayStyle.Flex;
             if (expandContainerItems.style.display == DisplayStyle.None) expandContainerItems.style.display = DisplayStyle.Flex;
@@ -95,11 +112,11 @@ namespace instance.id.AAI.Extensions
             {
                 foldoutAnimation =
                     expandContainerItems.experimental.animation.Start(new StyleValues {height = expandContainerItems.layout.height}, new StyleValues {height = 0}, animationTime);
-                foldoutAnimation.KeepAlive(); // Prevent it being reused when the animation is finished else an error may be thrown when we try to check if it has finished.
+                foldoutAnimation.KeepAlive();
             }
         }
 
-        void ExpandContainerValueChanges(bool evt)
+        private void ExpandContainerValueChanges(bool evt)
         {
             if (style.display == DisplayStyle.None) style.display = DisplayStyle.Flex;
             if (expandContainerItems.style.display == DisplayStyle.None) expandContainerItems.style.display = DisplayStyle.Flex;
@@ -119,11 +136,11 @@ namespace instance.id.AAI.Extensions
             {
                 foldoutAnimation =
                     expandContainerItems.experimental.animation.Start(new StyleValues {height = expandContainerItems.layout.height}, new StyleValues {height = 0}, animationTime);
-                foldoutAnimation.KeepAlive(); // Prevent it being reused when the animation is finished else an error may be thrown when we try to check if it has finished.
+                foldoutAnimation.KeepAlive();
             }
         }
 
-        void OnGeometryChangedEvent(GeometryChangedEvent evt)
+        private void OnGeometryChangedEvent(GeometryChangedEvent evt)
         {
             foldoutAnimation =
                 expandContainerItems.experimental.animation.Start(

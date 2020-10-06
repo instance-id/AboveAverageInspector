@@ -12,6 +12,7 @@ using System.Reflection.Emit;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
+using Object = System.Object;
 
 namespace instance.id.AAI.Extensions
 {
@@ -43,6 +44,29 @@ namespace instance.id.AAI.Extensions
         public const BindingFlags NonPublicFlags = BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
         public const BindingFlags StaticFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.FlattenHierarchy;
         public const BindingFlags InstanceFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+
+        public static T Cast<T>(this Object myobj)
+        {
+            Type objectType = myobj.GetType();
+            Type target = typeof(T);
+            var x = Activator.CreateInstance(target, false);
+            var z = from source in objectType.GetMembers().ToList()
+                where source.MemberType == MemberTypes.Property select source ;
+            var d = from source in target.GetMembers().ToList()
+                where source.MemberType == MemberTypes.Property select source;
+            List<MemberInfo> members = d.Where(memberInfo => d.Select(c => c.Name)
+                .ToList().Contains(memberInfo.Name)).ToList();
+            PropertyInfo propertyInfo;
+            object value;
+            foreach (var memberInfo in members)
+            {
+                propertyInfo = typeof(T).GetProperty(memberInfo.Name);
+                value = myobj.GetType().GetProperty(memberInfo.Name)?.GetValue(myobj,null);
+
+                propertyInfo?.SetValue(x,value,null);
+            }
+            return (T)x;
+        }
 
         // -------------------------------------------------------------- GetFieldViaPath
         // -- GetFieldViaPath -----------------------------------------------------------

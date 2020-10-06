@@ -116,6 +116,25 @@ TextField {
     border-left-width: 1px;
 }
 
+/*.categoryFoldout > .unity-foldout__expander >*/
+Expander > .expandContainer > .unity-foldout__content {
+    padding-top: 3px;
+    padding-left: 5px;
+    margin-left: -8px;
+    background-color: #383838;
+    border-left-color: #222222;
+    border-left-width: 1px;
+}
+
+Expander > .expandContainer {
+    padding-top: 3px;
+    padding-left: 5px;
+    margin-left: -8px;
+    background-color: #383838;
+    border-left-color: #222222;
+    border-left-width: 1px;
+}
+
 
 /*</editor-fold> categoryFoldout*/
 
@@ -179,6 +198,21 @@ TextField {
 }
 
 .propertyIntegerField {
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+/*------------------------------- propertyFloat -------*/
+/* -- propertyFloat -----------------------------------*/
+.propertyFloatLabel {
+    min-width: 110px;
+    max-width: 110px;
+    align-self: center;
+}
+
+.propertyFloatField {
     flex-grow: 1;
     flex-shrink: 1;
     overflow: hidden;

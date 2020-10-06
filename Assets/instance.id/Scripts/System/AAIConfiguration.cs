@@ -27,9 +27,10 @@ namespace instance.id.AAI
 
                 // -------------------------------------------- Settings
         // -- Settings -----------------------------------------
-        [UICategory("AAI Settings", 0)] public bool enableAnimation;
-        [UICategory("AAI Settings", 0)] public bool expandCategoriesByDefault;
-        [UICategory("AAI Settings", 0)] public bool enableCustomEditors;
+        [UICategory("AAI Settings", order: 0, toolTip: "Enable or disable category expansion animation")] public bool enableAnimation;
+        [UICategory("AAI Settings", order: 0, toolTip: "Enable or disable automatically expanding all categories by default. Overrides category attribute setting")] public bool expandCategoriesByDefault;
+        [UICategory("AAI Settings", order: 0, toolTip: "Enable or disable drawing of AAI")] public bool enableCustomEditors;
+        [UICategory("AAI Settings", order: 0, toolTip: "Animation Cascade Delay time: Value is multiplied * 1000 which equates to milliseconds. Ex: value of 0.1 will be multiplied by 1000 to give 100 milliseconds ")] public float animationCascadeDelay;
 
         // @formatter:off ----------------- Location Data Fields
         // -- Location Data Fields -----------------------------
