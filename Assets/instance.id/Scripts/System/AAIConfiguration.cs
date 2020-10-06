@@ -24,13 +24,16 @@ namespace instance.id.AAI
 
         // @formatter:off ------------------------ Main Settings
         // -- Main Settings ------------------------------------
-
-                // -------------------------------------------- Settings
-        // -- Settings -----------------------------------------
-        [UICategory("AAI Settings", order: 0, toolTip: "Enable or disable category expansion animation")] public bool enableAnimation;
-        [UICategory("AAI Settings", order: 0, toolTip: "Enable or disable automatically expanding all categories by default. Overrides category attribute setting")] public bool expandCategoriesByDefault;
-        [UICategory("AAI Settings", order: 0, toolTip: "Enable or disable drawing of AAI")] public bool enableCustomEditors;
-        [UICategory("AAI Settings", order: 0, toolTip: "Animation Cascade Delay time: Value is multiplied * 1000 which equates to milliseconds. Ex: value of 0.1 will be multiplied by 1000 to give 100 milliseconds ")] public float animationCascadeDelay;
+        [UICategory("AAI Settings", order: 0, toolTip: "Enable or disable category expansion animation")]
+        public bool enableAnimation = true;
+        [UICategory("AAI Settings", order: 0, toolTip: "Enable or disable automatically expanding all categories by default. Overrides category attribute setting")]
+        public bool expandCategoriesByDefault = false;
+        [UICategory("AAI Settings", order: 0, toolTip: "Enable or disable drawing of AAI")]
+        public bool enableCustomEditors = true;
+        [UICategory("AAI Settings", order: 0, toolTip: "The amount of time in milliseconds it takes for an animation to complete")]
+        public int animationTime = 500;
+        [UICategory("AAI Settings", order: 0, toolTip: "Animation Cascade Delay time: Value is multiplied * 1000 which equates to milliseconds. Ex: value of 0.1 will be multiplied by 1000 to give 100 milliseconds ")]
+        public float cascadeDelay = 0.13f;
 
         // @formatter:off ----------------- Location Data Fields
         // -- Location Data Fields -----------------------------
@@ -125,7 +128,8 @@ namespace instance.id.AAI
                 // aaiTypeStringList.Clear();
                 foreach (var exclusion in exclusionList) aaiTypeStringList.TryAddValue(exclusion);
 
-                if (configurationDebug) Debug.LogWarning($"New Type Found: Prior:{foundTypes.ToString()} Found: {aaiTypeStringList.Count.ToString()}");
+                if (configurationDebug) Debug.LogWarning($"New Type Found: Prior:{foundTypes.ToString()} " +
+                                                         $"Found: {aaiTypeStringList.Count.ToString()}");
                 foundTypes = aaiTypeStringList.Count;
             }
         }

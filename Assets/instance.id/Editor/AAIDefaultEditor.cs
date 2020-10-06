@@ -18,8 +18,12 @@ namespace instance.id.AAI.Editors
     {
         // -- Visual Elements --------------------------------------------
         protected VisualElement defaultRoot;
+
+        // -- Settings Data ----------------------------------------------
         public bool defaultEditorDebug;
         private bool isAnimated;
+        private float animationTime;
+        private float cascadeDelay;
 
         // -- Containers for custom elements from deriving classes -------
         public VisualElement beforeDefaultElements;
@@ -28,6 +32,7 @@ namespace instance.id.AAI.Editors
         private List<dynamic> foldout = new List<dynamic>();
         public List<string> excludedFields = new List<string>();
 
+        // -- PropertyField VisualElement Items --------------------------
         // ReSharper disable once NotAccessedField.Local
         private string m_IMGUIPropNeedsRelayout;
         private ScrollView m_ScrollView;
@@ -81,6 +86,8 @@ namespace instance.id.AAI.Editors
             BaseOnEnable();
             if (idConfig.AAIConfiguration().enableCustomEditors)
                 classDataDictionary = GetFieldData();
+            animationTime = idConfig.AAIConfiguration().animationTime;
+            cascadeDelay = idConfig.AAIConfiguration().cascadeDelay;
         }
 
         // ------------------------------------------------------------ GetFieldData
@@ -306,6 +313,7 @@ namespace instance.id.AAI.Editors
                                     propertyIntegerLabel.tooltip = propertyData.categoryAttr.toolTip;
                                     propertyIntegerField.tooltip = propertyData.categoryAttr.toolTip;
                                 }
+
                                 propertyIntegerLabel.AddToClassList("propertyIntegerLabel");
                                 propertyIntegerField.AddToClassList("propertyIntegerField");
                                 propertyRow.Add(propertyIntegerLabel);
@@ -330,6 +338,7 @@ namespace instance.id.AAI.Editors
                                     propertyFloatLabel.tooltip = propertyData.categoryAttr.toolTip;
                                     propertyFloatField.tooltip = propertyData.categoryAttr.toolTip;
                                 }
+
                                 propertyFloatLabel.AddToClassList("propertyFloatLabel");
                                 propertyFloatField.AddToClassList("propertyFloatField");
                                 propertyRow.Add(propertyFloatLabel);
@@ -493,22 +502,30 @@ namespace instance.id.AAI.Editors
                 if (isAnimated)
                 {
                     var item = (AnimatedFoldout) x;
-                    toggleItem = item.Q<Toggle>(null, AnimatedFoldout.toggleUssClassName);
-                    toggleItem.ToggleInClassList("categoryFoldoutClosed");
+                    var contentItem = item.Q(null, AnimatedFoldout.expanderUssClassName);
+                    contentItem.ToggleInClassList("categoryFoldoutClosed");
                     item.Q(null, "unity-toggle__checkmark").AddToClassList("toggleCheckmark");
                     item.RegisterCallback((ChangeEvent<bool> evt) =>
                     {
                         if (evt.target == item)
                         {
                             item.expander.Activate(evt.newValue);
-                            if (evt.newValue)
-                                item.contentContainer.style.display = DisplayStyle.Flex;
+                            if (evt.newValue) item.contentContainer.style.display = DisplayStyle.Flex;
 
-                            if (!evt.newValue)
-                                item.schedule.Execute(() => { item.contentContainer.style.display = DisplayStyle.None; }).StartingIn(0);
+                            if (!evt.newValue) // @formatter:off
+                            {
+                                item.schedule.Execute(() =>
+                                {
+                                    item.contentContainer.style.display = DisplayStyle.None;
+                                }).StartingIn(0);
+                                item.schedule.Execute(() =>
+                                {
+                                    contentItem.style.display = DisplayStyle.None;
+                                }).StartingIn(500); // @formatter:on
+                            }
                         }
                         else item.expander.TriggerExpanderResize(true);
-                    });
+                    }); // @formatter:on
                 }
                 else
                 {
@@ -600,8 +617,7 @@ namespace instance.id.AAI.Editors
 
                 // -- This creates a cascading expansion effect starting with the first category
                 // -- delaying the expansion of the subsequent categories by the delayValue * 1000 (equates to milliseconds)
-                var delayValue = 0.13;
-                var delayedTime = (long) (index * delayValue * 1000); // @formatter:on
+                var delayedTime = (long) (index * cascadeDelay * 1000); // @formatter:on
                 defaultRoot.schedule.Execute(e =>
                 {
                     if (isAnimated)

@@ -33,7 +33,7 @@ namespace instance.id.AAI
         // @formatter:off ----------------------------- SelectConfigObject
         // -- Main menu item to select and configure AAI settings       --
         // -- SelectConfigObject -----------------------------------------
-        [MenuItem("Tools/instance.id/Configure Settings", false)]
+        [MenuItem("Tools/instance.id/Configure AAI Settings", false)]
         public static void SelectConfigObject() // @formatter:on
         {
             Selection.objects = new Object[] {AAIConfiguration()};
@@ -84,7 +84,6 @@ namespace instance.id.AAI
             if (!(aaiConfiguration is null))
                 debug = aaiConfiguration.idConfigDebug;
         }
-
 
         // ----------------------------------------------------------------------- GetConfiguration
         // -- The AAIConfiguration keeps track of the current path of the AAI Asset as           --

@@ -32,6 +32,7 @@ namespace instance.id.AAI.Extensions
 
         public Expander()
         {
+            m_AnimationTime = idConfig.AAIConfiguration().animationTime;
             expandToggle = new Toggle {style = {display = DisplayStyle.None}, name = "ExpandToggle"};
             expandToggle.RegisterValueChangedCallback(ExpandContainerValueChanges);
 
@@ -50,11 +51,18 @@ namespace instance.id.AAI.Extensions
             expandContainerItems.style.display = DisplayStyle.None;
         }
 
+        /// <summary>
+        /// Trigger expansion or collapse of the expansion group
+        /// </summary>
         public void Activate()
         {
             expandToggle.value = !expandToggle.value;
         }
 
+        /// <summary>
+        /// Manually trigger expansion or collapse of the expansion group via parameter
+        /// </summary>
+        /// <param name="value">Expands on true, collapses on false</param>
         public void Activate(bool value)
         {
             expandToggle.value = value;
