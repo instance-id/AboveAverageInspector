@@ -108,7 +108,7 @@ namespace instance.id.AAI
                 aaiConfiguration = ScriptableObjectExtensions.CreateAsset<AAIConfiguration>(path);
                 aaiConfiguration.enableCustomEditors = true;
                 Assignments();
-                Debug.LogWarning("Could not locate the AAIConfiguration object. AAI will attempt to recreate it.");
+                Debug.LogWarning($"Could not locate the AAIConfiguration object. A new one has been created: {path}");
             }
         }
 
