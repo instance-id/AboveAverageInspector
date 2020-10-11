@@ -13,7 +13,7 @@ using Object = UnityEngine.Object;
 namespace instance.id.AAI.Editors
 {
     [CanEditMultipleObjects]
-    // [CustomEditor(typeof(Object), true, isFallback = true)]
+    [CustomEditor(typeof(Object), true, isFallback = true)]
     public class AAIDefaultEditor : Editor
     {
         // -- Visual Elements --------------------------------------------
