@@ -67,7 +67,7 @@ namespace YourCustom.Namespace
 }
 ```
 
-This will product the following result: 
+This will produce the following result: 
 The ExampleComponent object (Left) will use AAI, the Example2Component will use Odin Inspector (Right)
 
 ![](https://i.imgur.com/or9F7dA.png)
