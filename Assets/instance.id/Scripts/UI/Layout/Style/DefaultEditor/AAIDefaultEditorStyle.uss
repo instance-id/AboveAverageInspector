@@ -146,6 +146,7 @@ Expander > .expandContainer {
     flex-direction: row;
     overflow: hidden;
     padding-bottom: 3px;
+    flex-shrink: 0;
 }
 
 .propertyColumn {
@@ -153,6 +154,7 @@ Expander > .expandContainer {
     flex-direction: column;
     overflow: hidden;
     padding-bottom: 3px;
+    flex-shrink: 0;
 }
 
 .propertyColumn > .unity-property-field {

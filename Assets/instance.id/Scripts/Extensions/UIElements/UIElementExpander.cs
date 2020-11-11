@@ -118,8 +118,15 @@ namespace instance.id.AAI.Extensions
             }
             else
             {
-                foldoutAnimation =
-                    expandContainerItems.experimental.animation.Start(new StyleValues {height = expandContainerItems.layout.height}, new StyleValues {height = 0}, animationTime);
+                void HideContents()
+                {
+                    expandContainerItems.style.display = DisplayStyle.None;
+                }
+
+                foldoutAnimation = expandContainerItems.experimental.animation
+                    .Start(new StyleValues {height = expandContainerItems.layout.height}, new StyleValues {height = 0}, firstStart ? tmpAnimTime : m_AnimationTime)
+                    .Ease(Easy.EaseInOutQuint)
+                    .OnCompleted(HideContents);
                 foldoutAnimation.KeepAlive();
             }
         }
@@ -142,24 +149,30 @@ namespace instance.id.AAI.Extensions
             }
             else
             {
-                foldoutAnimation =
-                    expandContainerItems.experimental.animation.Start(new StyleValues {height = expandContainerItems.layout.height}, new StyleValues {height = 0}, animationTime);
+                void HideContents()
+                {
+                    expandContainerItems.style.display = DisplayStyle.None;
+                }
+
+                foldoutAnimation = expandContainerItems.experimental.animation
+                    .Start(new StyleValues {height = expandContainerItems.layout.height}, new StyleValues {height = 0.00001f}, firstStart ? tmpAnimTime : m_AnimationTime)
+                    .Ease(Easy.EaseInOutQuint)
+                    .OnCompleted(HideContents);
                 foldoutAnimation.KeepAlive();
             }
         }
 
         private void OnGeometryChangedEvent(GeometryChangedEvent evt)
         {
+            expandContainerItems.UnregisterCallback<GeometryChangedEvent>(OnGeometryChangedEvent);
             foldoutAnimation =
-                expandContainerItems.experimental.animation.Start(
-                    new StyleValues {height = evt.oldRect.height},
-                    new StyleValues {height = evt.newRect.height},
-                    firstStart ? tmpAnimTime : m_AnimationTime);
+                expandContainerItems.experimental.animation
+                    .Start(new StyleValues {height = evt.oldRect.height}, new StyleValues {height = evt.newRect.height}, firstStart ? tmpAnimTime : m_AnimationTime)
+                    .Ease(Easy.EaseInOutQuint);
 
             expandContainerItems.style.height = evt.oldRect.height;
 
             foldoutAnimation.KeepAlive();
-            expandContainerItems.UnregisterCallback<GeometryChangedEvent>(OnGeometryChangedEvent);
         }
     }
 }

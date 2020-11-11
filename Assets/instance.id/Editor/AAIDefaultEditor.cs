@@ -113,8 +113,6 @@ namespace instance.id.AAI.Editors
             else
             {
                 var attributes = target.GetType().GetClassFields(true);
-                // idConfig.AAIConfiguration().classDataDictionary.TryAddValue(targetName, attributes);
-                // idConfig.SaveAssetData();
                 classDict.TryAddValue(targetName, attributes);
             }
 
@@ -130,8 +128,6 @@ namespace instance.id.AAI.Editors
             else
             {
                 var attributes = this.GetEditorAttributes();
-                // idConfig.AAIConfiguration().classDataDictionary.TryAddValue(thisName, attributes);
-                // idConfig.SaveAssetData();
                 classDict.TryAddValue(thisName, attributes);
             }
 
@@ -444,14 +440,14 @@ namespace instance.id.AAI.Editors
                                     propertyColumn.Add(propertyField);
                                     boxContainer.Q(propertyData.categoryAttr.category).Add(propertyColumn);
                                 }
-                                else propertyColumn.Add(propertyField);
-
+                                // else propertyColumn.Add(propertyField);
+                                //
                                 if (propertyData.categoryAttr.toolTip != "")
                                 {
                                     propertyColumn.tooltip = propertyData.categoryAttr.toolTip;
                                 }
-
-                                boxContainer.Q(propertyData.categoryAttr.category).Add(propertyColumn);
+                                //
+                                // boxContainer.Q(propertyData.categoryAttr.category).Add(propertyColumn);
                                 break;
                         }
                     }
@@ -464,7 +460,22 @@ namespace instance.id.AAI.Editors
             {
                 foldoutList.RegisterValueChangedCallback(e =>
                 {
+                    // TODO Remove this:
                     if (!(e.target is Foldout fd)) return;
+                    Debug.Log($" {fd.name}");
+                    var path = fd.bindingPath;
+                    var container = m_ScrollView.Q<IMGUIContainer>(path);
+                    RecomputeSize(container);
+                });
+            }
+
+            foreach (var foldoutList in m_ScrollView.Query<AnimatedFoldout>().ToList())
+            {
+                foldoutList.RegisterValueChangedCallback(e =>
+                {
+                    // TODO Remove this:
+                    if (!(e.target is Foldout fd)) return;
+                    Debug.Log($" {fd.name}");
                     var path = fd.bindingPath;
                     var container = m_ScrollView.Q<IMGUIContainer>(path);
                     RecomputeSize(container);
@@ -507,22 +518,26 @@ namespace instance.id.AAI.Editors
                     item.Q(null, "unity-toggle__checkmark").AddToClassList("toggleCheckmark");
                     item.RegisterCallback((ChangeEvent<bool> evt) =>
                     {
-                        if (evt.target == item)
-                        {
-                            item.expander.Activate(evt.newValue);
-                            if (evt.newValue) item.contentContainer.style.display = DisplayStyle.Flex;
+                        var targetElement = evt.target as VisualElement;
 
-                            if (!evt.newValue) // @formatter:off
-                            {
-                                item.schedule.Execute(() =>
-                                {
-                                    item.contentContainer.style.display = DisplayStyle.None;
-                                }).StartingIn(0);
-                                item.schedule.Execute(() =>
-                                {
-                                    contentItem.style.display = DisplayStyle.None;
-                                }).StartingIn(500); // @formatter:on
-                            }
+                        if (targetElement == item) item.value = evt.newValue;
+
+                        if (targetElement.parent == item || targetElement == item || targetElement.contentContainer == item)
+                        {
+                            item.value = evt.newValue;
+                            // if (evt.newValue) item.contentContainer.style.display = DisplayStyle.Flex;
+
+                            // if (!evt.newValue) // @formatter:off
+                            // {
+                            //     item.schedule.Execute(() =>
+                            //     {
+                            //         item.contentContainer.style.display = DisplayStyle.None;
+                            //     }).StartingIn(500);
+                            //     item.schedule.Execute(() =>
+                            //     {
+                            //         contentItem.style.display = DisplayStyle.None;
+                            //     }).StartingIn(600); // @formatter:on
+                            // }
                         }
                         else item.expander.TriggerExpanderResize(true);
                     }); // @formatter:on

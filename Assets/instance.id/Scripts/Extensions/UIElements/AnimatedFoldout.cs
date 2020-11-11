@@ -79,6 +79,7 @@
             m_Toggle.RegisterValueChangedCallback(evt =>
             {
                 value = m_Toggle.value;
+                expander.Activate(value);
                 evt.StopPropagation();
             });
 
