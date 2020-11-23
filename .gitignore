@@ -69,7 +69,6 @@ crashlytics-build.properties
 InitTestScene*.unity.meta
 InitTestScene*.unity
 
-
 AboveAverageInspector.sln
 Assembly-CSharp-Editor-firstpass.csproj
 Assembly-CSharp-Editor.csproj
@@ -94,15 +93,13 @@ ProjectSettings/UnityConnectSettings.asset
 ProjectSettings/VersionControlSettings.asset
 ProjectSettings/VFXManager.asset
 ProjectSettings/XRSettings.asset
+
 Assets/instance.id/AAIConfiguration.asset
-
-
-# End of https://www.toptal.com/developers/gitignore/api/unity
-
 Assembly-CSharp-Editor.csproj.DotSettings
-
 Assembly-CSharp.csproj.DotSettings
-
 .history/
-
 .vscode/
+.bak/
+
+Assets/Samples/
+Assets/Samples.meta
