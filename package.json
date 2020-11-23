@@ -1,0 +1,33 @@
+{
+  "name": "id.instance.aboveaverageinspector",
+  "version": "0.1.0",
+  "githubUrl": "https://github.com/instance-id/AboveAverageInspector",
+  "displayName": "instance.id.AboveAverageInspector",
+  "repositoryName": "AboveAverageInspector",
+  "description": "An above average inspector drawer",
+  "type": "library",
+  "unity": "2019.4",
+  "hideInEditor": false,
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/instance-id/AboveAverageInspector.git"
+  },
+  "author": {
+    "name": "instance.id",
+    "email": "dan@instance.id",
+    "url": "https://github.com/instance-id",
+    "twitter": "instance_id",
+    "github": "instance-id"
+  },
+  "gitDependencies": {
+    "id.instance.extensions":"https://github.com/instance-id/Extensions.git#v0.1.2"
+  },
+  "samples": [
+    {
+      "displayName": "Sample Editor View",
+      "description": "Sample Component Editor",
+      "path": "Samples~/CustomEditor"
+    }
+  ]
+}

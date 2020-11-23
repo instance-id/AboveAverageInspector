@@ -1,0 +1,19 @@
+﻿/* ----------------------------------------------------------------------------
+// -- Project : https://github.com/instance-id/AboveAverageInspector         --
+// -- instance.id 2020 | http://github.com/instance-id | http://instance.id  --
+// -- DefaultEditorBase.uss ------------------------------------------------ */
+
+/* --------------------------------- */
+/* Container ----------------------- */
+/*<editor-fold desc="Container">*/
+
+.unity-inspector-element {
+    padding-left: 0px;
+    padding-top: 0px;
+    padding-right: 0px;
+    margin-bottom: 2px;
+}
+
+/*</editor-fold> Container*/
+
+/*</editor-fold>*/
